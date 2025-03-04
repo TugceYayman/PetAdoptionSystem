@@ -30,3 +30,163 @@ body {
             color: #007bff;
             text-decoration: none;
         }
+
+		h1 {
+		    color: #007bff;
+		    text-align: center;
+		}
+
+		.dashboard-section {
+		    background: white;
+		    padding: 15px;
+		    border: 1px solid #ddd;
+		    border-radius: 8px;
+		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 20px;
+		}
+
+		/* Pets section */
+		#petsSection h2 {
+		    color: #28a745;
+		}
+
+		#petsTableContainer table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-top: 15px;
+		}
+
+		#petsTableContainer th, #petsTableContainer td {
+		    border: 1px solid #ddd;
+		    padding: 10px;
+		    text-align: left;
+		}
+
+		#petsTableContainer th {
+		    background-color: #28a745;
+		    color: white;
+		}
+
+		/* Adoptions section */
+		#adoptionsSection h2 {
+		    color: #007bff;
+		}
+
+		#adoptionsTableContainer table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-top: 15px;
+		}
+
+		#adoptionsTableContainer th, #adoptionsTableContainer td {
+		    border: 1px solid #ddd;
+		    padding: 10px;
+		    text-align: left;
+		}
+
+		#adoptionsTableContainer th {
+		    background-color: #007bff;
+		    color: white;
+		}
+
+		/* Buttons */
+		button {
+		    cursor: pointer;
+		    margin: 5px 0;
+		    padding: 5px 10px;
+		    border-radius: 5px;
+		    border: none;
+		}
+
+		.btn-approve {
+		    background-color: #28a745;
+		    color: white;
+		}
+
+		.btn-reject {
+		    background-color: #dc3545;
+		    color: white;
+		}
+
+		.btn-remove {
+		    background-color: #ff6347;
+		    color: white;
+		}
+
+		/* Modal */
+		.modal {
+		    display: none;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: rgba(0,0,0,0.5);
+		    justify-content: center;
+		    align-items: center;
+		}
+
+		.modal-content {
+		    background: white;
+		    padding: 20px;
+		    border-radius: 8px;
+		    text-align: center;
+		}
+
+		.modal input {
+		    display: block;
+		    margin: 10px auto;
+		    padding: 8px;
+		    width: 80%;
+		}
+		
+		
+		.cards-container {
+		    display: flex;
+		    flex-wrap: wrap;
+		    gap: 15px;
+		    margin-top: 15px;
+		}
+
+		.pet-card {
+		    width: 250px;
+		    background: white;
+		    border: 1px solid #ddd;
+		    border-radius: 8px;
+		    overflow: hidden;
+		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.pet-card img {
+		    width: 100%;
+		    height: 150px;
+		    object-fit: cover;
+		}
+
+		.pet-card .card-body {
+		    padding: 10px;
+		}
+
+		.pet-card .card-body h5 {
+		    margin: 5px 0;
+		    color: #007bff;
+		}
+
+		.pet-card .card-body p {
+		    margin: 3px 0;
+		    font-size: 14px;
+		}
+
+		.pet-card button {
+		    margin-top: 5px;
+		    padding: 5px;
+		    cursor: pointer;
+		    border: none;
+		    border-radius: 4px;
+		    color: white;
+		}
+
+		.btn-remove {
+		    background-color: #dc3545;
+		}
+
