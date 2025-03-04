@@ -1,0 +1,17 @@
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/petadoptiondb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root  # Replace with your actual password
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update  # In production, 'validate' or 'none' might be better
+    show-sql: true
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: false

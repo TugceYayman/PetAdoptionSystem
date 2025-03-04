@@ -1,0 +1,13 @@
+server:
+  port: 8081
+  error:
+    include-stacktrace: always
+    include-message: always
+
+spring:
+  profiles:
+    active: mysql  # This means it will load application-mysql.yml
+
+app:
+  admin:
+    password: admin123  # You can use this later if you want to auto-create the admin user on startup (optional)
