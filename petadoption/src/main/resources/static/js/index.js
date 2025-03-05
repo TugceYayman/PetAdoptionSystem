@@ -1,4 +1,4 @@
-async function fetchPets() {
+/*async function fetchPets() {
     const response = await fetch('/api/pets');
     const pets = await response.json();
 
@@ -38,6 +38,6 @@ async function adoptPet(petId) {
     } else {
         alert('Adoption request failed.');
     }
-}
+/}
 
-fetchPets();
+fetchPets();*/

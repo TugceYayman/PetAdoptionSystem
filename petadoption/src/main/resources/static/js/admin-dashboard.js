@@ -1,4 +1,4 @@
-$(document).ready(function () {
+/*$(document).ready(function () {
     fetchPets();
     fetchAdoptions();
 });
@@ -119,3 +119,4 @@ async function addPet() {
     closeAddPetModal();
     fetchPets();
 }
+*/

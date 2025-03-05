@@ -23,19 +23,16 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    // BCrypt Password Encoder Bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Authentication Manager Bean
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
-    // Authentication Provider (binds UserDetailsService and PasswordEncoder together)
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -44,36 +41,40 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // Security Filter Chain (specifies which routes are public/protected)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())  // Disable CSRF for API (adjust if needed)
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // Public pages (login/register pages and static assets)
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers(
+                        "/",
+                        "/index.html",
+                        "/login.html",
+                        "/register.html"
+                ).permitAll()
 
-                .authorizeHttpRequests(auth -> auth
-                        // Allow all static assets (HTML, JS, CSS, images)
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers(
-                                "/", // This is handled by WebController (redirect to login.html)
-                                "/index.html", 
-                                "/login.html", 
-                                "/register.html", 
-                                "/my-adoptions.html", 
-                                "/admin-dashboard.html"
-                        ).permitAll()
-                        // Allow authentication and H2 console (optional for testing)
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
+                // Public auth endpoints
+                .requestMatchers("/auth/**").permitAll()
 
-                        // Protect your API endpoints
-                        .requestMatchers("/api/pets/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/adoptions/**").hasAuthority("USER")
+                // H2 Console (for local development)
+                .requestMatchers("/h2-console/**").permitAll()
 
-                        // Any other request requires authentication
-                        .anyRequest().authenticated()
-                )
-                // Add JWT filter before standard Username/Password filter
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                // Role-specific API access
+                .requestMatchers("/api/dashboard/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/dashboard/csr/**").hasRole("CSR")
+                .requestMatchers("/api/dashboard/support/**").hasRole("SUPPORT")
+                .requestMatchers("/api/dashboard/network/**").hasRole("NETWORK")
+
+                // Regular protected API access
+                .requestMatchers("/api/pets/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/adoptions/**").hasAuthority("USER")
+
+                // Catch-all: any other requests must be authenticated
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 }

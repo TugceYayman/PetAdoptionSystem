@@ -1,14 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-    <title>Adopt a Pet</title>
+    <meta charset="UTF-8">
+    <title>Pet Adoption Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
-    <h1>Meet Our Adorable Pets! 🐾</h1>
-    <div class="pet-list" id="petList"></div>
 
+    <div class="container mt-4">
+        <!-- ========== LOGIN PAGE (DEFAULT VIEW) ========== -->
+        <div id="loginPage" class="page">
+            <h2>Welcome Back! 🐾</h2>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+			<p>New? <a href="#" id="goToRegister">Please create an account</a></p>
+            <div id="loginErrorMessage" class="alert alert-danger d-none"></div>
+        </div>
+
+		<!-- ========== REGISTER PAGE ========== -->
+		<div id="registerPage" class="page d-none">
+		    <h2>Join Our Family! 🐾</h2>
+		    <form id="registerForm">
+		        <input type="text" id="registerName" placeholder="Your Name" required>
+		        <input type="email" id="registerEmail" placeholder="Email" required>
+		        <input type="password" id="registerPassword" placeholder="Password" required>
+		        <button type="submit">Register</button>
+		    </form>
+		    <p>Already have an account? <a href="#" id="goToLogin">Login here</a></p>
+		</div>
+
+        <!-- ========== ADMIN DASHBOARD PAGE ========== -->
+        <div id="adminDashboardPage" class="page d-none">
+            <h1>🐾 Admin Dashboard - Pet Adoption</h1>
+            <div id="petsSection">
+                <h2>All Pets</h2>
+                <button class="btn btn-success" onclick="showAddPetModal()">➕ Add New Pet</button>
+                <div id="petsCardContainer"></div>
+            </div>
+            <div id="adoptionsSection" class="mt-4">
+                <h2>Pending Adoptions</h2>
+                <div id="adoptionsTableContainer"></div>
+            </div>
+        </div>
+
+        <!-- ========== USER PET LIST PAGE ========== -->
+        <div id="petListPage" class="page d-none">
+            <h1>Meet Our Adorable Pets! 🐾</h1>
+            <div class="pet-list" id="petList"></div>
+        </div>
+
+        <!-- ========== MY ADOPTIONS PAGE ========== -->
+        <div id="myAdoptionsPage" class="page d-none">
+            <h1>My Adoption Requests 🐾</h1>
+            <ul id="adoptionsList"></ul>
+        </div>
+
+        <!-- Modal for Adding Pets (For Admins) -->
+        <div id="addPetModal" class="modal d-none">
+            <div class="modal-content">
+                <h2>Add New Pet</h2>
+                <input type="text" id="petName" placeholder="Pet Name">
+                <input type="text" id="petType" placeholder="Pet Type">
+                <button class="btn btn-primary" onclick="addPet()">Add Pet</button>
+                <button class="btn btn-secondary" onclick="closeAddPetModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+	<script src="js/login.js"></script>
+    <script src="js/admin-dashboard.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/my-adoptions.js"></script>
+    <script src="js/register.js"></script>
 </body>
 </html>

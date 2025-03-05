@@ -1,192 +1,385 @@
+/* General Page Styling */
 body {
-            background-color: #f8f9fa;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-		.login-header {
-		    font-size: 1.5rem;
-		    font-weight: bold;
-		    margin-bottom: 1rem;
-		    text-align: center;
-		    color: #6c757d;
-		    font-family: Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
-		}
+    background-color: #fffaf5;
+    font-family: 'Comic Sans MS', 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .new-account {
-            margin-top: 1rem;
-            text-align: center;
-        }
-        .new-account a {
-            color: #007bff;
-            text-decoration: none;
-        }
+/* Ensure parent container uses flex for centering */
+#appContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
 
-		h1 {
-		    color: #007bff;
-		    text-align: center;
-		}
+/* Centering for all pages (Login, Register, etc.) */
+.page {
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 2px solid #ffcb77;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
 
-		.dashboard-section {
-		    background: white;
-		    padding: 15px;
-		    border: 1px solid #ddd;
-		    border-radius: 8px;
-		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		    margin-bottom: 20px;
-		}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-		/* Pets section */
-		#petsSection h2 {
-		    color: #28a745;
-		}
+/* Cute Title Text */
+h2 {
+    font-family: 'Comic Sans MS', cursive;
+    color: #ff6f61;
+    font-size: 24px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
 
-		#petsTableContainer table {
-		    width: 100%;
-		    border-collapse: collapse;
-		    margin-top: 15px;
-		}
+h2::before, h2::after {
+    content: "🐾";
+}
 
-		#petsTableContainer th, #petsTableContainer td {
-		    border: 1px solid #ddd;
-		    padding: 10px;
-		    text-align: left;
-		}
+/* Form Fields */
+input[type="email"], 
+input[type="password"], 
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff8f5;
+    font-family: inherit;
+}
 
-		#petsTableContainer th {
-		    background-color: #28a745;
-		    color: white;
-		}
+/* Buttons */
+button {
+    background-color: #ff944d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    font-family: inherit;
+}
 
-		/* Adoptions section */
-		#adoptionsSection h2 {
-		    color: #007bff;
-		}
+button:hover {
+    background-color: #ff6f61;
+}
 
-		#adoptionsTableContainer table {
-		    width: 100%;
-		    border-collapse: collapse;
-		    margin-top: 15px;
-		}
+/* Links */
+a {
+    color: #ff6f61;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-		#adoptionsTableContainer th, #adoptionsTableContainer td {
-		    border: 1px solid #ddd;
-		    padding: 10px;
-		    text-align: left;
-		}
+a:hover {
+    text-decoration: underline;
+}
 
-		#adoptionsTableContainer th {
-		    background-color: #007bff;
-		    color: white;
-		}
+/* New Account Link */
+.new-account {
+    margin-top: 10px;
+    font-size: 14px;
+}
 
-		/* Buttons */
-		button {
-		    cursor: pointer;
-		    margin: 5px 0;
-		    padding: 5px 10px;
-		    border-radius: 5px;
-		    border: none;
-		}
+/* Popups */
+.popup-message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-weight: bold;
+}
 
-		.btn-approve {
-		    background-color: #28a745;
-		    color: white;
-		}
+.alert-danger {
+    background-color: #ff6f6f;
+    color: white;
+}
 
-		.btn-reject {
-		    background-color: #dc3545;
-		    color: white;
-		}
+.alert-success {
+    background-color: #77dd77;
+    color: white;
+}
 
-		.btn-remove {
-		    background-color: #ff6347;
-		    color: white;
-		}
+/* Dashboard Sections */
+.dashboard-section {
+    background: white;
+    padding: 20px;
+    border: 2px solid #ffcb77;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-		/* Modal */
-		.modal {
-		    display: none;
-		    position: fixed;
-		    top: 0;
-		    left: 0;
-		    width: 100%;
-		    height: 100%;
-		    background: rgba(0,0,0,0.5);
-		    justify-content: center;
-		    align-items: center;
-		}
+.dashboard-section h2 {
+    font-family: 'Comic Sans MS', cursive;
+    color: #ff6f61;
+    margin-bottom: 15px;
+}
 
-		.modal-content {
-		    background: white;
-		    padding: 20px;
-		    border-radius: 8px;
-		    text-align: center;
-		}
+/* Pet Cards */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
 
-		.modal input {
-		    display: block;
-		    margin: 10px auto;
-		    padding: 8px;
-		    width: 80%;
-		}
-		
-		
-		.cards-container {
-		    display: flex;
-		    flex-wrap: wrap;
-		    gap: 15px;
-		    margin-top: 15px;
-		}
+.pet-card {
+    width: 250px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
 
-		.pet-card {
-		    width: 250px;
-		    background: white;
-		    border: 1px solid #ddd;
-		    border-radius: 8px;
-		    overflow: hidden;
-		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		}
+.pet-card:hover {
+    transform: translateY(-5px);
+}
 
-		.pet-card img {
-		    width: 100%;
-		    height: 150px;
-		    object-fit: cover;
-		}
+.pet-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
 
-		.pet-card .card-body {
-		    padding: 10px;
-		}
+.pet-card .card-body {
+    padding: 10px;
+}
 
-		.pet-card .card-body h5 {
-		    margin: 5px 0;
-		    color: #007bff;
-		}
+.pet-card h5 {
+    margin: 5px 0;
+    color: #ff6f61;
+    font-family: 'Comic Sans MS', cursive;
+}
 
-		.pet-card .card-body p {
-		    margin: 3px 0;
-		    font-size: 14px;
-		}
+.pet-card p {
+    font-size: 14px;
+    margin: 5px 0;
+}
 
-		.pet-card button {
-		    margin-top: 5px;
-		    padding: 5px;
-		    cursor: pointer;
-		    border: none;
-		    border-radius: 4px;
-		    color: white;
-		}
+.pet-card button {
+    background-color: #ff944d;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
 
-		.btn-remove {
-		    background-color: #dc3545;
-		}
+.pet-card button:hover {
+    background-color: #ff6f61;
+}
+
+/* Adoption Table */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #ffcb77;
+    color: white;
+}
+
+.btn-approve {
+    background-color: #77dd77;
+    color: white;
+}
+
+.btn-reject {
+    background-color: #ff6f61;
+    color: white;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal input {
+    width: 90%;
+    margin: 10px 0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .page {
+        width: 90%;
+    }
+}
+
+
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #fffaf5;
+    font-family: 'Comic Sans MS', 'Arial', sans-serif;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Center only the login/register form */
+.page {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 2px solid #ffcb77;
+    position: absolute;     /* This is the magic */
+    top: 50%;                /* Center vertically */
+    left: 50%;                /* Center horizontally */
+    transform: translate(-50%, -50%); /* Fine-tuning to true center */
+    z-index: 10;              /* Keeps it above background elements */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Optional fade-in */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* Title */
+h2 {
+    font-family: 'Comic Sans MS', cursive;
+    color: #ff6f61;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Form fields */
+input[type="email"], 
+input[type="password"], 
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff8f5;
+    font-family: inherit;
+}
+
+/* Buttons */
+button {
+    background-color: #ff944d;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+}
+
+button:hover {
+    background-color: #ff6f61;
+}
+
+/* Links */
+a {
+    color: #ff6f61;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Popup messages */
+.popup-message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-weight: bold;
+}
+
+.alert-danger {
+    background-color: #ff6f6f;
+    color: white;
+}
+
+.alert-success {
+    background-color: #77dd77;
+    color: white;
+}
 
