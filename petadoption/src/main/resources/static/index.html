@@ -10,7 +10,7 @@
 <body>
 
     <div class="container mt-4">
-        <!-- ========== LOGIN PAGE (DEFAULT VIEW) ========== -->
+        <!-- ========== LOGIN PAGE ========== -->
         <div id="loginPage" class="page">
             <h2>Welcome Back! 🐾</h2>
             <form id="loginForm">
@@ -18,89 +18,84 @@
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button type="submit">Login</button>
             </form>
-			<p>New? <a href="#" id="goToRegister">Please create an account</a></p>
+            <p>New? <a href="#" id="goToRegister">Please create an account</a></p>
             <div id="loginErrorMessage" class="alert alert-danger d-none"></div>
         </div>
 
-		<!-- ========== REGISTER PAGE ========== -->
-		<div id="registerPage" class="page d-none">
-		    <h2>Join Our Family! 🐾</h2>
-		    <form id="registerForm">
-		        <input type="text" id="registerName" placeholder="Your Name" required>
-		        <input type="email" id="registerEmail" placeholder="Email" required>
-		        <input type="password" id="registerPassword" placeholder="Password" required>
-		        <button type="submit">Register</button>
-		    </form>
-		    <p>Already have an account? <a href="#" id="goToLogin">Login here</a></p>
-		</div>
+        <!-- ========== REGISTER PAGE ========== -->
+        <div id="registerPage" class="page d-none">
+            <h2>Join Our Family! 🐾</h2>
+            <form id="registerForm">
+                <input type="text" id="registerName" placeholder="Your Name" required>
+                <input type="email" id="registerEmail" placeholder="Email" required>
+                <input type="password" id="registerPassword" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="goToLogin">Login here</a></p>
+        </div>
 
-		<!-- ========== ADMIN DASHBOARD PAGE ========== -->
-		<div id="adminDashboardPage" class="page d-none">
-		    <h1>🐾 Admin Dashboard - Pet Adoption</h1>
+        <!-- ========== ADMIN DASHBOARD PAGE ========== -->
+        <div id="adminDashboardPage" class="page d-none">
+            <h1>🐾 Admin Dashboard - Pet Adoption</h1>
 
-		    <!-- Pets Section -->
-		    <div id="petsSection">
-		        <h2>All Pets</h2>
-		        <button id="addPetButton" class="btn btn-success">➕ Add New Pet</button>
-		        <div id="petsCardContainer">
-		            <p id="noPetsMessage" class="text-muted">No pets available.</p>
-		        </div>
-		    </div>
+            <!-- Pets Section -->
+            <div id="petsSection">
+                <h2>All Pets</h2>
+                <button id="addPetButton" class="btn btn-success mb-3">➕ Add New Pet</button>
+                <div id="petsCardContainer" class="d-flex flex-wrap gap-3 justify-content-center">
+                    <p id="noPetsMessage" class="text-muted">No pets available.</p>
+                </div>
+            </div>
 
-		    <!-- Pending Adoptions Section -->
-		    <div id="adoptionsSection" class="mt-4">
-		        <h2>Pending Adoptions</h2>
-		        <div id="adoptionsTableContainer">
-		            <p id="noAdoptionsMessage" class="text-muted">No pending adoptions.</p>
-		        </div>
-		    </div>
-		</div>
+            <!-- Pending Adoptions Section -->
+            <div id="adoptionsSection" class="mt-4">
+                <h2>Pending Adoptions</h2>
+                <div id="adoptionsTableContainer">
+                    <p id="noAdoptionsMessage" class="text-muted">No pending adoptions.</p>
+                </div>
+            </div>
+        </div>
 
-		<!-- Modal for Adding Pets -->
-		<div id="addPetModal" class="modal d-none">
-		    <div class="modal-content">
-		        <h2>Add New Pet</h2>
-		        <input type="text" id="petName" placeholder="Pet Name" required>
-		        <input type="text" id="petType" placeholder="Pet Type" required>
-		        <input type="text" id="petBreed" placeholder="Pet Breed" required>
-		        <input type="number" id="petAge" placeholder="Pet Age" min="0" required>
-		        <select id="petStatus">
-		            <option value="AVAILABLE">Available</option>
-		            <option value="ADOPTED">Adopted</option>
-		        </select>
+        <!-- ========== Add Pet Modal ========== -->
+        <div id="addPetModal" class="modal d-none">
+            <div class="modal-content">
+                <h2>Add New Pet</h2>
+                <input type="text" id="petName" placeholder="Pet Name" required>
+                <input type="text" id="petType" placeholder="Pet Type" required>
+                <input type="text" id="petBreed" placeholder="Pet Breed" required>
+                <input type="number" id="petAge" placeholder="Pet Age" min="0" required>
+                <select id="petStatus">
+                    <option value="AVAILABLE">Available</option>
+                    <option value="ADOPTED">Adopted</option>
+                </select>
 
-		        <!-- ✅ File Upload for Pet Image -->
-		        <label for="petImage">Upload Image:</label>
-		        <input type="file" id="petImage" accept="image/*">
+                <!-- ✅ File Upload for Pet Image -->
+                <label for="petImage">Upload Image:</label>
+                <input type="file" id="petImage" accept="image/*">
 
-		        <button id="confirmAddPet" class="btn btn-primary">Add Pet</button>
-		        <button id="closeAddPetModal" class="btn btn-secondary">Cancel</button>
-		    </div>
-		</div>
+                <button id="confirmAddPet" class="btn btn-primary">Add Pet</button>
+                <button id="closeAddPetModal" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
 
-		<!-- ✅ Modal for Updating Pets -->
-		<div id="updatePetModal" class="modal d-none">
-		    <div class="modal-content">
-		        <h2>Update Pet Details</h2>
-		        <input type="hidden" id="updatePetId">
-		        <input type="text" id="updatePetName" placeholder="Pet Name" required>
-		        <input type="text" id="updatePetType" placeholder="Pet Type" required>
-		        <input type="text" id="updatePetBreed" placeholder="Pet Breed" required>
-		        <input type="number" id="updatePetAge" placeholder="Pet Age" min="0" required>
-		        <select id="updatePetStatus">
-		            <option value="AVAILABLE">Available</option>
-		            <option value="ADOPTED">Adopted</option>
-		        </select>
-
-		        <!-- ✅ File Upload for Updating Pet Image -->
-		        <label for="updatePetImage">Upload Image:</label>
-		        <input type="file" id="updatePetImage" accept="image/*">
-
-		        <button id="confirmUpdatePet" class="btn btn-primary">Save Changes</button>
-		        <button id="closeUpdatePetModal" class="btn btn-secondary">Cancel</button>
-		    </div>
-		</div>
-
+        <!-- ========== Update Pet Modal ========== -->
+        <div id="updatePetModal" class="modal d-none">
+            <div class="modal-content">
+                <h2>Update Pet Details</h2>
+                <input type="text" id="updatePetName" placeholder="Pet Name" required>
+                <input type="text" id="updatePetType" placeholder="Pet Type" required>
+                <input type="text" id="updatePetBreed" placeholder="Pet Breed" required>
+                <input type="number" id="updatePetAge" placeholder="Age" min="0" required>
+                <select id="updatePetStatus">
+                    <option value="AVAILABLE">Available</option>
+                    <option value="ADOPTED">Adopted</option>
+                </select>
+                <label>Upload Image:</label>
+                <input type="file" id="updatePetImage" accept="image/*">
+				<button class="btn btn-primary" onclick="updatePet()">Save Changes</button>
+                <button class="btn btn-secondary" onclick="$('#updatePetModal').hide()">Cancel</button>
+            </div>
+        </div>
 
         <!-- ========== USER PET LIST PAGE ========== -->
         <div id="petListPage" class="page d-none">
@@ -113,24 +108,14 @@
             <h1>My Adoption Requests 🐾</h1>
             <ul id="adoptionsList"></ul>
         </div>
-
-        <!-- Modal for Adding Pets (For Admins) -->
-        <div id="addPetModal" class="modal d-none">
-            <div class="modal-content">
-                <h2>Add New Pet</h2>
-                <input type="text" id="petName" placeholder="Pet Name">
-                <input type="text" id="petType" placeholder="Pet Type">
-                <button class="btn btn-primary" onclick="addPet()">Add Pet</button>
-                <button class="btn btn-secondary" onclick="closeAddPetModal()">Cancel</button>
-            </div>
-        </div>
     </div>
-	<!-- Ensure Scripts Load After Content -->
-	<script src="js/login.js"></script>
-	<script src="js/admin-dashboard.js"></script>
-	<script src="js/index.js"></script>
-	<script src="js/my-adoptions.js"></script>
-	<script src="js/register.js"></script>
+
+    <!-- Ensure Scripts Load After Content -->
+    <script src="js/login.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/my-adoptions.js"></script>
+    <script src="js/register.js"></script>
 
 </body>
 </html>

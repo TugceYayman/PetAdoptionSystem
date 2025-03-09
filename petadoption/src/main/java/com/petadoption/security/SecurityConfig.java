@@ -2,6 +2,7 @@ package com.petadoption.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -60,14 +61,20 @@ public class SecurityConfig {
 
                 // H2 Console (for local development)
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+
 
                 // Role-specific API access
                 .requestMatchers("/api/dashboard/admin/**").hasRole("ADMIN")
 
                 // Regular protected API access
-                .requestMatchers("/api/adoptions/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers("/api/pets/**").permitAll()  // Allow public access (if intended)
-                .requestMatchers("/api/admin/adoptions/**").authenticated()  // Require authentication but not role check yet
+            //    .requestMatchers("/api/adoptions/**").hasAnyAuthority("ADMIN", "USER")
+             // Ensure only ADMIN can modify pets
+                .requestMatchers(HttpMethod.PUT, "/api/pets/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasAuthority("ADMIN")
+                
+                .requestMatchers("/api/pets/**").authenticated()
+                .requestMatchers("/api/admin/adoptions/**").authenticated()
 
 
                 // Catch-all: any other requests must be authenticated

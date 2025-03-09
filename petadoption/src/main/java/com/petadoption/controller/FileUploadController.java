@@ -22,15 +22,10 @@ public class FileUploadController {
     private FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            String fileUrl = fileStorageService.uploadFile(file);
-            Map<String, String> response = new HashMap<>();
-            response.put("url", fileUrl);
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to upload file."));
-        }
+    public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        String fileUrl = fileStorageService.uploadFile(file);
+		Map<String, String> response = new HashMap<>();
+		response.put("url", fileUrl);
+		return ResponseEntity.ok(response);
     }
 }

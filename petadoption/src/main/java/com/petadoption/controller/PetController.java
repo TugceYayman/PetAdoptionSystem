@@ -2,6 +2,7 @@ package com.petadoption.controller;
 
 import com.petadoption.model.Pet;
 import com.petadoption.model.PetStatus;
+import com.petadoption.model.PetUpdateRequest;
 import com.petadoption.repository.PetRepository;
 import com.petadoption.service.FileStorageService;
 
@@ -23,7 +24,8 @@ public class PetController {
 
     private final PetRepository petRepository;
 
-    public PetController(PetRepository petRepository) {
+    public PetController(FileStorageService fileStorageService, PetRepository petRepository) {
+        this.fileStorageService = fileStorageService;
         this.petRepository = petRepository;
     }
 
@@ -40,7 +42,7 @@ public class PetController {
 
     
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("/api/pets/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updatePet(
             @PathVariable Long id,
             @RequestParam("name") String name,
@@ -68,13 +70,53 @@ public class PetController {
                 String imageUrl = fileStorageService.uploadFile(imageFile);
                 pet.setImageUrl(imageUrl);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload image: " + e.getMessage());
             }
         }
 
         petRepository.save(pet);
         return ResponseEntity.ok("Pet updated successfully!");
     }
+
+
+
+
+//    @PutMapping("/api/pets/{id}")
+//    public ResponseEntity<?> updatePet(
+//            @PathVariable Long id,
+//            @RequestParam("name") String name,
+//            @RequestParam("type") String type,
+//            @RequestParam("breed") String breed,
+//            @RequestParam("age") int age,
+//            @RequestParam("status") String status,
+//            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+//
+//        Optional<Pet> optionalPet = petRepository.findById(id);
+//        if (optionalPet.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pet not found.");
+//        }
+//
+//        Pet pet = optionalPet.get();
+//        pet.setName(name);
+//        pet.setType(type);
+//        pet.setBreed(breed);
+//        pet.setAge(age);
+//        pet.setStatus(PetStatus.valueOf(status));
+//
+//        // ✅ Handle Image Upload
+//        if (imageFile != null && !imageFile.isEmpty()) {
+//            try {
+//                String imageUrl = fileStorageService.uploadFile(imageFile);
+//                pet.setImageUrl(imageUrl);
+//            } catch (Exception e) {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image.");
+//            }
+//        }
+//
+//        petRepository.save(pet);
+//        return ResponseEntity.ok("Pet updated successfully!");
+//    }
 
 
     @PreAuthorize("hasAuthority('ADMIN')")

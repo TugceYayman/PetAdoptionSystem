@@ -98,40 +98,65 @@ function openUpdateModal(petId) {
     });
 }
 
-// ✅ Update Pet with File Upload
-function updatePet() {
-    let token = localStorage.getItem('token');
-    let petId = $('#updatePetId').val();
-    let formData = new FormData();
 
+// ✅ Define selectedPetId globally
+let selectedPetId = null;
+
+// ✅ Function to Open Update Modal & Set Selected Pet
+function showUpdateModal(id, name, type, breed, age, status) {
+    selectedPetId = id; // Set the selected pet ID globally
+
+    // Fill update modal fields with existing pet details
+    $('#updatePetName').val(name);
+    $('#updatePetType').val(type);
+    $('#updatePetBreed').val(breed);
+    $('#updatePetAge').val(age);
+    $('#updatePetStatus').val(status);
+
+    // Show the modal
+    $('#updatePetModal').removeClass('d-none').show();
+}
+
+// ✅ Function to Update Pet Details
+function updatePet() {
+    const petId = selectedPetId;
+    if (!petId) {
+        showErrorPopup("No pet selected for update.");
+        return;
+    }
+
+    const formData = new FormData();
     formData.append("name", $('#updatePetName').val().trim());
     formData.append("type", $('#updatePetType').val().trim());
     formData.append("breed", $('#updatePetBreed').val().trim());
-    formData.append("age", $('#updatePetAge').val().trim());
+    formData.append("age", $('#updatePetAge').val());
     formData.append("status", $('#updatePetStatus').val());
 
-    let petImageFile = $('#updatePetImage')[0].files[0];
-    if (petImageFile) {
-        formData.append("image", petImageFile);
+    const fileInput = $('#updatePetImage')[0].files[0];
+    if (fileInput) {
+        formData.append("image", fileInput);
     }
 
     $.ajax({
         url: `/api/pets/${petId}`,
         type: 'PUT',
-        headers: { 'Authorization': 'Bearer ' + token },
-        contentType: false,
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
         processData: false,
+        contentType: false,
         data: formData,
-        success: function () {
+        success: function (response) {
             showPopup("✅ Pet updated successfully!", "success");
             $('#updatePetModal').hide();
             fetchPets();
         },
-        error: function () {
-            showPopup("❌ Failed to update pet.", "error");
+        error: function (xhr) {
+            console.error("❌ Error updating pet:", xhr.responseText);
+            showErrorPopup("Failed to update pet.");
         }
     });
 }
+
+
 
 // ✅ Show Error Popup Instead of Alert
 function showPopup(message, type) {
@@ -146,16 +171,35 @@ function showPopup(message, type) {
     }, 3000);
 }
 
+function showErrorPopup(message) {
+    const popup = $('<div class="popup-message alert-danger"></div>').text(message);
+    $('body').append(popup);
 
-// ✅ Fetch Pets
+    setTimeout(function () {
+        popup.fadeOut(function () {
+            popup.remove();
+        });
+    }, 3000);
+}
+
+
+
+// ✅ Fetch Pets with Detailed Logging
 window.fetchPets = function () {
     console.log("📡 Fetching Pets...");
     let token = localStorage.getItem('token');  
+
+    if (!token) {
+        showErrorPopup("Authentication token missing. Please log in again.");
+        return;
+    }
+
     $.ajax({
         url: '/api/pets',
         headers: { 'Authorization': 'Bearer ' + token },
         success: function (pets) {
             console.log("✅ Pets Fetched:", pets);
+
             if (!pets || pets.length === 0) {
                 $('#petsCardContainer').html('<p class="text-center">No pets available.</p>');
             } else {
@@ -163,8 +207,8 @@ window.fetchPets = function () {
             }
         },
         error: function (xhr) {
-            console.error("❌ Error fetching pets:", xhr.responseText);
-            showErrorPopup("Failed to load pets.");
+            console.error("❌ Error fetching pets:", xhr.status, xhr.responseText);
+            showErrorPopup(`Failed to load pets. Status: ${xhr.status} - ${xhr.responseText}`);
         }
     });
 };
@@ -210,7 +254,10 @@ window.renderPetsForAdmin = function (pets) {
                         <p><strong>Breed:</strong> ${pet.breed}</p>
                         <p><strong>Age:</strong> ${pet.age} years</p>
                         <p><strong>Status:</strong> ${pet.status}</p>
-                        <button class="btn btn-warning update-pet" data-id="${pet.id}" data-name="${pet.name}" data-type="${pet.type}">✏️ Update</button>
+						<button class="btn btn-warning" 
+						    onclick="showUpdateModal('${pet.id}', '${pet.name}', '${pet.type}', '${pet.breed}', ${pet.age}, '${pet.status}')">
+						    ✏️ Update
+						</button>
                         <button class="btn btn-danger remove-pet" data-id="${pet.id}">❌ Remove</button>
                     </div>
                 </div>
