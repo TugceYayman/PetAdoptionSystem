@@ -63,13 +63,12 @@ public class SecurityConfig {
 
                 // Role-specific API access
                 .requestMatchers("/api/dashboard/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/dashboard/csr/**").hasRole("CSR")
-                .requestMatchers("/api/dashboard/support/**").hasRole("SUPPORT")
-                .requestMatchers("/api/dashboard/network/**").hasRole("NETWORK")
 
                 // Regular protected API access
-                .requestMatchers("/api/pets/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/adoptions/**").hasAuthority("USER")
+                .requestMatchers("/api/adoptions/**").hasAnyAuthority("ADMIN", "USER")
+                .requestMatchers("/api/pets/**").permitAll()  // Allow public access (if intended)
+                .requestMatchers("/api/admin/adoptions/**").authenticated()  // Require authentication but not role check yet
+
 
                 // Catch-all: any other requests must be authenticated
                 .anyRequest().authenticated()

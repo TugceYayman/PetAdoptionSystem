@@ -1,21 +1,17 @@
 $(document).ready(function () {
-
-    // When the document is ready, show login page initially
+    // Show login page initially
     switchToPage('loginPage');
 
-    // Attach event handler for the "create account" link in login page
     $('#goToRegister').on('click', function (e) {
         e.preventDefault();
         switchToPage('registerPage');
     });
 
-    // Attach event handler for the "login here" link in register page
     $('#goToLogin').on('click', function (e) {
         e.preventDefault();
         switchToPage('loginPage');
     });
 
-    // Attach form submit handler for login
     $('#loginForm').on('submit', function (e) {
         e.preventDefault();
 
@@ -40,7 +36,13 @@ $(document).ready(function () {
 
                 if (response.role === 'ADMIN') {
                     switchToPage('adminDashboardPage');
-                    loadAdminData();
+                    console.log("✅ Admin logged in, fetching dashboard data...");
+
+                    // ✅ Fetch data after token is stored
+                    setTimeout(() => {
+                        fetchPets();
+                        fetchAdoptions();
+                    }, 500);
                 } else {
                     switchToPage('petListPage');
                     loadPets();
@@ -53,58 +55,16 @@ $(document).ready(function () {
         });
     });
 
-    // Function to switch pages (hide all, show selected one)
     function switchToPage(pageId) {
         $('.page').hide();
         $('#' + pageId).removeClass('d-none').show();
     }
-
-    // Error popup helper
+    
     function showErrorPopup(message) {
-        const errorPopup = $('<div class="alert alert-danger popup-message"></div>').text(message);
-        $('body').append(errorPopup);
-        setTimeout(function () {
-            errorPopup.fadeOut(function () { errorPopup.remove(); });
-        }, 3000);
+        alert(message);
     }
 
     function showSuccessPopup(message) {
-        const successPopup = $('<div class="alert alert-success popup-message"></div>').text(message);
-        $('body').append(successPopup);
-        setTimeout(function () {
-            successPopup.fadeOut(function () { successPopup.remove(); });
-        }, 3000);
-    }
-
-    // Example functions to load data (optional if you have them in your index.js/admin-dashboard.js)
-    function loadPets() {
-        $.ajax({
-            url: '/api/pets',
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-            success: function (pets) {
-                renderPets(pets);
-            },
-            error: function () {
-                showErrorPopup('Failed to load pets.');
-            }
-        });
-    }
-
-    function loadAdminData() {
-        $.ajax({
-            url: '/api/pets',
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-            success: function (pets) {
-                renderPetsForAdmin(pets);
-            }
-        });
-
-        $.ajax({
-            url: '/api/adoptions',
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-            success: function (adoptions) {
-                renderAdoptions(adoptions);
-            }
-        });
+        alert(message);
     }
 });

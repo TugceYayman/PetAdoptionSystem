@@ -34,19 +34,73 @@
 		    <p>Already have an account? <a href="#" id="goToLogin">Login here</a></p>
 		</div>
 
-        <!-- ========== ADMIN DASHBOARD PAGE ========== -->
-        <div id="adminDashboardPage" class="page d-none">
-            <h1>🐾 Admin Dashboard - Pet Adoption</h1>
-            <div id="petsSection">
-                <h2>All Pets</h2>
-                <button class="btn btn-success" onclick="showAddPetModal()">➕ Add New Pet</button>
-                <div id="petsCardContainer"></div>
-            </div>
-            <div id="adoptionsSection" class="mt-4">
-                <h2>Pending Adoptions</h2>
-                <div id="adoptionsTableContainer"></div>
-            </div>
-        </div>
+		<!-- ========== ADMIN DASHBOARD PAGE ========== -->
+		<div id="adminDashboardPage" class="page d-none">
+		    <h1>🐾 Admin Dashboard - Pet Adoption</h1>
+
+		    <!-- Pets Section -->
+		    <div id="petsSection">
+		        <h2>All Pets</h2>
+		        <button id="addPetButton" class="btn btn-success">➕ Add New Pet</button>
+		        <div id="petsCardContainer">
+		            <p id="noPetsMessage" class="text-muted">No pets available.</p>
+		        </div>
+		    </div>
+
+		    <!-- Pending Adoptions Section -->
+		    <div id="adoptionsSection" class="mt-4">
+		        <h2>Pending Adoptions</h2>
+		        <div id="adoptionsTableContainer">
+		            <p id="noAdoptionsMessage" class="text-muted">No pending adoptions.</p>
+		        </div>
+		    </div>
+		</div>
+
+		<!-- Modal for Adding Pets -->
+		<div id="addPetModal" class="modal d-none">
+		    <div class="modal-content">
+		        <h2>Add New Pet</h2>
+		        <input type="text" id="petName" placeholder="Pet Name" required>
+		        <input type="text" id="petType" placeholder="Pet Type" required>
+		        <input type="text" id="petBreed" placeholder="Pet Breed" required>
+		        <input type="number" id="petAge" placeholder="Pet Age" min="0" required>
+		        <select id="petStatus">
+		            <option value="AVAILABLE">Available</option>
+		            <option value="ADOPTED">Adopted</option>
+		        </select>
+
+		        <!-- ✅ File Upload for Pet Image -->
+		        <label for="petImage">Upload Image:</label>
+		        <input type="file" id="petImage" accept="image/*">
+
+		        <button id="confirmAddPet" class="btn btn-primary">Add Pet</button>
+		        <button id="closeAddPetModal" class="btn btn-secondary">Cancel</button>
+		    </div>
+		</div>
+
+		<!-- ✅ Modal for Updating Pets -->
+		<div id="updatePetModal" class="modal d-none">
+		    <div class="modal-content">
+		        <h2>Update Pet Details</h2>
+		        <input type="hidden" id="updatePetId">
+		        <input type="text" id="updatePetName" placeholder="Pet Name" required>
+		        <input type="text" id="updatePetType" placeholder="Pet Type" required>
+		        <input type="text" id="updatePetBreed" placeholder="Pet Breed" required>
+		        <input type="number" id="updatePetAge" placeholder="Pet Age" min="0" required>
+		        <select id="updatePetStatus">
+		            <option value="AVAILABLE">Available</option>
+		            <option value="ADOPTED">Adopted</option>
+		        </select>
+
+		        <!-- ✅ File Upload for Updating Pet Image -->
+		        <label for="updatePetImage">Upload Image:</label>
+		        <input type="file" id="updatePetImage" accept="image/*">
+
+		        <button id="confirmUpdatePet" class="btn btn-primary">Save Changes</button>
+		        <button id="closeUpdatePetModal" class="btn btn-secondary">Cancel</button>
+		    </div>
+		</div>
+
 
         <!-- ========== USER PET LIST PAGE ========== -->
         <div id="petListPage" class="page d-none">
@@ -71,10 +125,12 @@
             </div>
         </div>
     </div>
+	<!-- Ensure Scripts Load After Content -->
 	<script src="js/login.js"></script>
-    <script src="js/admin-dashboard.js"></script>
-    <script src="js/index.js"></script>
-    <script src="js/my-adoptions.js"></script>
-    <script src="js/register.js"></script>
+	<script src="js/admin-dashboard.js"></script>
+	<script src="js/index.js"></script>
+	<script src="js/my-adoptions.js"></script>
+	<script src="js/register.js"></script>
+
 </body>
 </html>
