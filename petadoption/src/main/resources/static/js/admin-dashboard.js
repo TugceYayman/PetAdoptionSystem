@@ -236,45 +236,35 @@ window.fetchAdoptions = function () {
 };
 
 // ✅ Render Pets with 3-Column Layout
+// ✅ Render Pets Responsively with Dynamic Grid Layout
 window.renderPetsForAdmin = function (pets) {
     console.log("📌 Rendering Pets...");
     const container = $('#petsCardContainer');
     container.empty();
 
-    let rowDiv = $('<div class="row"></div>'); // Create a row container
-
-    pets.forEach((pet, index) => {
+    pets.forEach((pet) => {
         const petCard = `
-            <div class="col-md-4 mb-4">
-                <div class="card pet-card shadow-sm p-3 rounded">
-                    <img src="${pet.imageUrl || 'default-image.jpg'}" class="card-img-top rounded" alt="${pet.name}">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-danger">${pet.name}</h5>
-                        <p><strong>Type:</strong> ${pet.type}</p>
-                        <p><strong>Breed:</strong> ${pet.breed}</p>
-                        <p><strong>Age:</strong> ${pet.age} years</p>
-                        <p><strong>Status:</strong> ${pet.status}</p>
-						<button class="btn btn-warning" 
-						    onclick="showUpdateModal('${pet.id}', '${pet.name}', '${pet.type}', '${pet.breed}', ${pet.age}, '${pet.status}')">
-						    ✏️ Update
-						</button>
-                        <button class="btn btn-danger remove-pet" data-id="${pet.id}">❌ Remove</button>
-                    </div>
+            <div class="pet-card">
+                <img src="${pet.imageUrl || 'default-image.jpg'}" class="card-img-top rounded" alt="${pet.name}">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-danger">${pet.name}</h5>
+                    <p><strong>Type:</strong> ${pet.type}</p>
+                    <p><strong>Breed:</strong> ${pet.breed}</p>
+                    <p><strong>Age:</strong> ${pet.age} years</p>
+                    <p><strong>Status:</strong> ${pet.status}</p>
+                    <button class="btn btn-warning update-pet" 
+                        data-id="${pet.id}" data-name="${pet.name}" data-type="${pet.type}" 
+                        data-breed="${pet.breed}" data-age="${pet.age}" data-status="${pet.status}">
+                        ✏️ Update
+                    </button>
+                    <button class="btn btn-danger remove-pet" data-id="${pet.id}">❌ Remove</button>
                 </div>
             </div>`;
 
-        rowDiv.append(petCard);
-
-        if ((index + 1) % 3 === 0) {
-            container.append(rowDiv);
-            rowDiv = $('<div class="row"></div>'); // Start a new row
-        }
+        container.append(petCard);
     });
 
-    if (rowDiv.children().length > 0) {
-        container.append(rowDiv);
-    }
-
+    // ✅ Attach event listeners dynamically
     $(document).off('click', '.remove-pet').on('click', '.remove-pet', function () {
         const petId = $(this).data('id');
         confirmRemovePet(petId);
@@ -284,14 +274,14 @@ window.renderPetsForAdmin = function (pets) {
         const petId = $(this).data('id');
         const petName = $(this).data('name');
         const petType = $(this).data('type');
+        const petBreed = $(this).data('breed');
+        const petAge = $(this).data('age');
+        const petStatus = $(this).data('status');
 
-        $('#updatePetId').val(petId);
-        $('#updatePetName').val(petName);
-        $('#updatePetType').val(petType);
-
-        $('#updatePetModal').removeClass('d-none').show();
+        showUpdateModal(petId, petName, petType, petBreed, petAge, petStatus);
     });
 };
+
 
 // ✅ Confirmation Before Removing Pet
 function confirmRemovePet(petId) {
@@ -337,6 +327,15 @@ window.addPet = function () {
         data: JSON.stringify({ name: petName, type: petType }),
         success: function () {
             alert("✅ Pet added successfully!");
+		
+			      $('#petName').val('');
+			      $('#petType').val('');
+			      $('#petBreed').val('');
+			      $('#petAge').val('');
+			     $('#petStatus').val('AVAILABLE'); // Reset to default
+			     $('#petImage').val(''); // Clear file inpu
+				 
+				 
             fetchPets();
             $('#addPetModal').hide();
         },
