@@ -186,6 +186,21 @@ html, body {
 }
 
 
+#pendingRequestsList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+#pendingRequestCard {
+    max-width: 250px;
+    min-width: 220px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
 /* ============================ */
 /* ✅ Responsive Fixes */
 /* ============================ */
