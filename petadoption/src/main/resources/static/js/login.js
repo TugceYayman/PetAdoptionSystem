@@ -88,41 +88,38 @@ $(document).ready(function () {
 	}
 
 
-    // ✅ Initialize User Dashboard After Login
-    function initializeUserDashboard() {
-        console.log("🔄 Initializing User Dashboard...");
+	function initializeUserDashboard() {
+	    console.log("🔄 Initializing User Dashboard...");
 
-        // ✅ Ensure Available Pets is the default view
-        $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
-        $("#petsContainer").removeClass("d-none");
+	    // ✅ Ensure User Dashboard is Visible
+	    $(".dashboard-container").removeClass("d-none");
 
-        // ✅ Load Available Pets AFTER Making Sure Section is Visible
-        setTimeout(() => {
-            loadAvailablePets();
-        }, 500);
+	    // ✅ Load Available Pets as Default View
+	    showSection("petsContainer");
+	    setTimeout(() => {
+	        loadAvailablePets(); // ✅ Ensure Function Exists
+	    }, 500);
 
-        // ✅ Ensure Button Click Handlers Are Assigned
-        $('#viewPetsBtn').off().on('click', function () {
-            console.log("🐶 Viewing Available Pets");
-            $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
-            $("#petsContainer").removeClass("d-none");
-            loadAvailablePets();
-        });
+	    // ✅ Assign Sidebar Button Clicks
+	    $('#viewPetsBtn').off().on('click', function () {
+	        console.log("🐶 Viewing Available Pets");
+	        showSection("petsContainer");
+	        loadAvailablePets();
+	    });
 
-        $('#myPetsBtn').off().on('click', function () {
-            console.log("🏠 Viewing My Pets");
-            $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
-            $("#myPetsContainer").removeClass("d-none");
-            loadMyPets();
-        });
+	    $('#myPetsBtn').off().on('click', function () {
+	        console.log("🏠 Viewing My Pets");
+	        showSection("myPetsContainer");
+	        loadMyPets();
+	    });
 
-        $('#pendingRequestsBtn').off().on('click', function () {
-            console.log("⏳ Viewing Pending Requests");
-            $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
-            $("#pendingRequestsContainer").removeClass("d-none");
-            loadPendingRequests();
-        });
-    }
+	    $('#pendingRequestsBtn').off().on('click', function () {
+	        console.log("⏳ Viewing Pending Requests");
+	        showSection("pendingRequestsContainer");
+	        loadPendingRequests();
+	    });
+	}
+
 
     function showErrorPopup(message) {
         alert(message);
