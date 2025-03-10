@@ -16,8 +16,6 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     // ✅ Find an adoption request for a specific pet by a specific user
     Optional<Adoption> findByUserAndPet(User user, Pet pet);
 
-    // ✅ Get all pending adoption requests for a specific user
-    List<Adoption> findByUserAndStatus(User user, AdoptionStatus status);
 
     // ✅ Check if a user has already requested to adopt a specific pet
     boolean existsByUserAndPet(User user, Pet pet);
@@ -25,6 +23,10 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     List<Adoption> findByUser(User user);
     
     List<Adoption> findByStatus(AdoptionStatus status); // 🔴 This was missing!
+    
+    // ✅ Get all pending adoption requests for a specific user
+    List<Adoption> findByUserAndStatus(User user, AdoptionStatus status);
+
 
 
 }

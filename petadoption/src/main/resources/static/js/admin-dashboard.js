@@ -1,19 +1,42 @@
 $(document).ready(function () {
-    console.log("🔄 Checking if Admin Dashboard is visible...");
+	console.log("✅ Admin Dashboard Loaded");
 
-    let token = localStorage.getItem('token');
-    let userRole = localStorage.getItem('userRole');
+	    let token = localStorage.getItem('token');
+	    let userRole = localStorage.getItem('userRole');
 
-    if (!$('#adminDashboardPage').length) {
-        return;
-    }
+		// Prevent infinite loop: only redirect if not already on login page
+		if (!token || userRole !== 'ADMIN') {
+		    console.warn("🚨 Unauthorized Access. Redirecting to Login...");
 
-    if (!token || userRole !== 'ADMIN') {
-        console.warn("🚨 User is not authenticated or not an admin. Stopping dashboard loading.");
-        return;
-    }
+		    if (window.location.pathname !== "/index.html") {
+		        window.location.href = "index.html";
+		    }
+		}
 
-    console.log("✅ Admin Dashboard Loaded");
+
+	    // ✅ Sidebar Navigation
+	    $('#viewPendingRequestsBtn').on('click', function () {
+	        $('#pendingRequestsSection').removeClass('d-none');
+	        $('#managePetsSection').addClass('d-none');
+	        fetchPendingRequests();
+	    });
+
+	    $('#managePetsBtn').on('click', function () {
+	        $('#managePetsSection').removeClass('d-none');
+	        $('#pendingRequestsSection').addClass('d-none');
+	        fetchPets();
+	    });
+		
+		
+		$('#logoutBtn').on('click', function () {
+		    $('#logoutModal').modal('show');
+		});
+
+		// ✅ Confirm Logout for Admin
+		$('#confirmLogout').on('click', function () {
+		    logoutAdmin();
+		});
+
 
     // ✅ Event Listeners for Modals
     $(document).on('click', '#addPetButton', function () {
@@ -367,5 +390,82 @@ window.addPet = function () {
         }
     });
 };
+
+
+// ✅ Fetch Pending Adoption Requests
+function fetchPendingRequests() {
+    console.log("📡 Fetching Pending Requests...");
+    let token = localStorage.getItem('token');
+
+    $.ajax({
+        url: '/api/admin/adoptions/pending',
+        headers: { 'Authorization': 'Bearer ' + token },
+        success: function (requests) {
+            let tableBody = $("#pendingRequestsTable tbody");
+            tableBody.empty();
+
+            if (!requests.length) {
+                tableBody.append("<tr><td colspan='4' class='text-center'>No pending requests.</td></tr>");
+                return;
+            }
+
+            requests.forEach(request => {
+                let row = `
+                    <tr>
+                        <td>${request.pet.name}</td>
+                        <td>${request.user.name}</td>
+                        <td>${request.status}</td>
+                        <td>
+                            <button class="btn btn-success approve-request" data-id="${request.id}">✅ Approve</button>
+                            <button class="btn btn-danger reject-request" data-id="${request.id}">❌ Reject</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+
+            // ✅ Handle Approve/Reject Buttons
+            $('.approve-request').on('click', function () {
+                handleAdoptionRequest($(this).data('id'), 'approve');
+            });
+
+            $('.reject-request').on('click', function () {
+                handleAdoptionRequest($(this).data('id'), 'reject');
+            });
+        },
+        error: function (xhr) {
+            console.error("❌ Error fetching pending requests:", xhr.responseText);
+        }
+    });
+}
+
+// ✅ Handle Approve/Reject Adoption Request
+function handleAdoptionRequest(requestId, action) {
+    let token = localStorage.getItem('token');
+    let endpoint = `/api/admin/adoptions/${action}/${requestId}`;
+
+    $.ajax({
+        url: endpoint,
+        type: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + token },
+        success: function () {
+            alert(`✅ Adoption request ${action}d successfully!`);
+            fetchPendingRequests();
+        },
+        error: function (xhr) {
+            console.error(`❌ Error ${action}ing request:`, xhr.responseText);
+        }
+    });
+}
+
+function logoutAdmin() {
+    console.log("🚪 Logging out admin...");
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+
+    setTimeout(() => {
+        window.location.href = "index.html"; // Ensures logout is processed properly
+    }, 500);
+}
 
 

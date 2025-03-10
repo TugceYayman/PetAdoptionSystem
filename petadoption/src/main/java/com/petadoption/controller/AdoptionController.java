@@ -57,6 +57,26 @@ public class AdoptionController {
 
         return ResponseEntity.ok("Adoption request sent successfully.");
     }
+    
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/my-pets")
+    public ResponseEntity<List<Pet>> getMyAdoptedPets(Authentication authentication) {
+        String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Adoption> approvedAdoptions = adoptionRepository.findByUserAndStatus(user, AdoptionStatus.APPROVED);
+
+        List<Pet> adoptedPets = approvedAdoptions.stream()
+                .map(Adoption::getPet)
+                .toList();
+
+        System.out.println("✅ Fetching My Pets for: " + userEmail);
+        System.out.println("✅ Adopted Pets Found: " + adoptedPets.size());
+
+        return ResponseEntity.ok(adoptedPets);
+    }
+
 
     // ✅ Get a user's adoption requests
     @PreAuthorize("hasAuthority('USER')")

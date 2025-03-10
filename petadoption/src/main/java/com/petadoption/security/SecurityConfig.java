@@ -72,10 +72,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasAuthority("ADMIN")
 
                 // ✅ Allow users to access pending requests
-                .requestMatchers("/api/adoptions/pending-requests").hasAuthority("USER")
+                .requestMatchers("/api/adoptions/my-pets", "/api/adoptions/my-requests", "/api/adoptions/pending-requests").hasAuthority("USER") // ✅ Ensure correct permissions
                 .requestMatchers("/api/adoptions/**").authenticated()
                 .requestMatchers("/api/pets/**").authenticated()
-                .requestMatchers("/api/admin/adoptions/**").authenticated()
+                .requestMatchers("/api/admin/adoptions/**").hasAuthority("ADMIN") // ✅ Allow only admins
+              //  .requestMatchers("/api/admin/adoptions/**").authenticated()
+             //   .requestMatchers("/api/adoptions/**").hasAnyAuthority("ADMIN", "USER")
+
 
 
                 // Catch-all: any other requests must be authenticated

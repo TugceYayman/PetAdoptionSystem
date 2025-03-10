@@ -22,7 +22,6 @@ public class AdminAdoptionController {
         this.petRepository = petRepository;
     }
 
-    // ✅ Get all pending adoption requests
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/pending")
     public ResponseEntity<List<Adoption>> getPendingAdoptions() {
@@ -32,6 +31,7 @@ public class AdminAdoptionController {
         }
         return ResponseEntity.ok(pendingRequests);
     }
+
 
     // ✅ Approve an adoption request
     @PreAuthorize("hasAuthority('ADMIN')")
