@@ -78,24 +78,15 @@
     margin-top: 20px;
 }
 
-/* ✅ Display 3 Pet Cards Per Row */
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-/* Ensures the cards are evenly spaced and aligned */
+/* ✅ Fix Cards Layout for All Screen Sizes */
 #petsCardContainer {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Centers the items */
-    gap: 20px; /* Adds space between cards */
+    justify-content: center;
+    gap: 20px;
 }
 
-/* Pet card styling */
+/* ✅ Pet Card Styling */
 .pet-card {
     width: calc(33.333% - 20px); /* Ensures 3 cards per row */
     max-width: 300px; /* Prevents oversized cards */
@@ -106,39 +97,44 @@
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    display: flex;
+    flex-direction: column;
     transition: transform 0.3s ease;
 }
-
 
 .pet-card:hover {
     transform: translateY(-5px);
 }
 
+/* ✅ Pet Image Fix */
 .pet-card img {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
 }
 
-/* ✅ Fix pet card content */
+/* ✅ Ensures card content stays aligned */
 .pet-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 10px;
 }
 
-.pet-card h5 {
-    margin: 5px 0;
-    color: #ff6f61;
-    font-family: 'Comic Sans MS', cursive;
+/* ✅ Buttons Stay at Bottom */
+.pet-card .button-container {
+    margin-top: auto; 
+    display: flex;
+    flex-direction: column;
 }
 
-.pet-card p {
-    font-size: 14px;
-    margin: 5px 0;
-}
-
-/* ✅ Fix Buttons */
+/* ✅ Fix Update & Remove Button Styling */
 .pet-card button {
+    display: block;
+    width: 100%;  
+    margin-top: 8px;  
     background-color: #ff944d;
     border: none;
     padding: 8px 12px;
@@ -152,11 +148,15 @@
     background-color: #ff6f61;
 }
 
-/* ✅ Center Add Pet Button */
+/* ✅ Center "Add New Pet" Button */
 #petsSection {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#addPetButton {
+    margin-bottom: 20px;
 }
 
 /* ✅ Fix Modal */
@@ -197,37 +197,6 @@
     display: none;
 }
 
-/* ✅ Add Spacing Between Update & Remove Buttons */
-.pet-card button {
-    display: block;  /* Ensures buttons stack vertically */
-    width: 100%;  
-    margin-top: 8px;  /* Add space between buttons */
-}
-
-/* ✅ Fix Spacing for "Add New Pet" Button */
-#addPetButton {
-    margin-bottom: 20px; /* Adds space below the button */
-}
-
-
-/* ✅ Update Pet Modal Styling */
-#updatePetModal .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-}
-
-#updatePetModal input, #updatePetModal select {
-    width: 90%;
-    margin: 10px 0;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
 /* ✅ Popup Message Styling */
 .popup-message {
     position: fixed;
@@ -251,8 +220,13 @@
     color: white;
 }
 
-
 /* ✅ Responsive Fixes */
+@media (max-width: 992px) {
+    .pet-card {
+        width: calc(50% - 20px); /* 2 cards per row on medium screens */
+    }
+}
+
 @media (max-width: 768px) {
     .cards-container {
         flex-direction: column;
@@ -264,16 +238,8 @@
     }
 }
 
-
-
-/* Makes the cards adjust to smaller screens */
-@media (max-width: 992px) {
-    .pet-card {
-        width: calc(50% - 20px); /* 2 cards per row on medium screens */
-    }
-}
-
 @media (max-width: 600px) {
     .pet-card {
         width: 100%; /* Full width on small screens */
     }
+}

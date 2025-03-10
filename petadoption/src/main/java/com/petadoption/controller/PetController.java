@@ -35,10 +35,38 @@ public class PetController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping
-    public Pet addPet(@RequestBody Pet pet) {
-        return petRepository.save(pet);
+    @PostMapping(consumes = "multipart/form-data") // ✅ Ensure multipart/form-data is accepted
+    public ResponseEntity<?> addPet(
+            @RequestParam("name") String name,
+            @RequestParam("type") String type,
+            @RequestParam("breed") String breed,
+            @RequestParam("age") int age,
+            @RequestParam("status") String status,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+
+        Pet pet = new Pet();
+        pet.setName(name);
+        pet.setType(type);
+        pet.setBreed(breed);
+        pet.setAge(age);
+        pet.setStatus(PetStatus.valueOf(status));
+
+        // ✅ Handle Image Upload
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String imageUrl = fileStorageService.uploadFile(imageFile);
+                pet.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload image: " + e.getMessage());
+            }
+        }
+
+        petRepository.save(pet);
+        return ResponseEntity.ok("Pet added successfully!");
     }
+
+
 
     
     @PreAuthorize("hasAuthority('ADMIN')")

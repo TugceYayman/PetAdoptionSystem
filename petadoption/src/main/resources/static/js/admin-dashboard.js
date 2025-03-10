@@ -236,33 +236,47 @@ window.fetchAdoptions = function () {
 };
 
 // ✅ Render Pets with 3-Column Layout
-// ✅ Render Pets Responsively with Dynamic Grid Layout
 window.renderPetsForAdmin = function (pets) {
     console.log("📌 Rendering Pets...");
     const container = $('#petsCardContainer');
     container.empty();
 
+    const rowDiv = $('<div class="row g-4"></div>'); // Bootstrap Grid Layout
+
     pets.forEach((pet) => {
+        let imageUrl = pet.imageUrl ? pet.imageUrl : '/uploads/default-image.jpg'; // ✅ Fix missing images
         const petCard = `
-            <div class="pet-card">
-                <img src="${pet.imageUrl || 'default-image.jpg'}" class="card-img-top rounded" alt="${pet.name}">
-                <div class="card-body text-center">
-                    <h5 class="card-title text-danger">${pet.name}</h5>
-                    <p><strong>Type:</strong> ${pet.type}</p>
-                    <p><strong>Breed:</strong> ${pet.breed}</p>
-                    <p><strong>Age:</strong> ${pet.age} years</p>
-                    <p><strong>Status:</strong> ${pet.status}</p>
-                    <button class="btn btn-warning update-pet" 
-                        data-id="${pet.id}" data-name="${pet.name}" data-type="${pet.type}" 
-                        data-breed="${pet.breed}" data-age="${pet.age}" data-status="${pet.status}">
-                        ✏️ Update
-                    </button>
-                    <button class="btn btn-danger remove-pet" data-id="${pet.id}">❌ Remove</button>
+            <div class="col-md-4 d-flex align-items-stretch">
+                <div class="card pet-card shadow-sm p-3 rounded w-100">
+                    <img src="${imageUrl}" class="card-img-top rounded pet-image" alt="${pet.name}" 
+                        onerror="this.onerror=null; this.src='/uploads/default-image.jpg';">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title text-danger">${pet.name}</h5>
+                            <p><strong>Type:</strong> ${pet.type}</p>
+                            <p><strong>Breed:</strong> ${pet.breed}</p>
+                            <p><strong>Age:</strong> ${pet.age} years</p>
+                            <p><strong>Status:</strong> ${pet.status}</p>
+                        </div>
+                        <div class="mt-auto">
+                            <button class="btn btn-warning w-100 update-pet" 
+                                data-id="${pet.id}" data-name="${pet.name}" 
+                                data-type="${pet.type}" data-breed="${pet.breed}" 
+                                data-age="${pet.age}" data-status="${pet.status}">
+                                ✏️ Update
+                            </button>
+                            <button class="btn btn-danger w-100 remove-pet mt-2" data-id="${pet.id}">
+                                ❌ Remove
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>`;
 
-        container.append(petCard);
+        rowDiv.append(petCard);
     });
+
+    container.append(rowDiv); // Append full row to container
 
     // ✅ Attach event listeners dynamically
     $(document).off('click', '.remove-pet').on('click', '.remove-pet', function () {
@@ -308,36 +322,44 @@ window.removePet = function (petId) {
     });
 };
 
-// ✅ Add Pet
+// ✅ Add Pet with Image Upload
+// ✅ Add Pet with File Upload
 window.addPet = function () {
-    const petName = $('#petName').val().trim();
-    const petType = $('#petType').val().trim();
     let token = localStorage.getItem('token');
+    let formData = new FormData();
 
-    if (!petName || !petType) {
-        showErrorPopup("⚠️ Please enter all pet details.");
-        return;
+    // ✅ Collect all pet details
+    formData.append("name", $('#petName').val().trim());
+    formData.append("type", $('#petType').val().trim());
+    formData.append("breed", $('#petBreed').val().trim());
+    formData.append("age", $('#petAge').val().trim());
+    formData.append("status", $('#petStatus').val());
+
+    let petImageFile = $('#petImage')[0].files[0];
+    if (petImageFile) {
+        formData.append("image", petImageFile);
     }
 
     $.ajax({
         url: '/api/pets',
         type: 'POST',
         headers: { 'Authorization': 'Bearer ' + token },
-        contentType: 'application/json',
-        data: JSON.stringify({ name: petName, type: petType }),
+        contentType: false, // ✅ Required for form data
+        processData: false, // ✅ Prevents jQuery from processing the data
+        data: formData,
         success: function () {
-            alert("✅ Pet added successfully!");
-		
-			      $('#petName').val('');
-			      $('#petType').val('');
-			      $('#petBreed').val('');
-			      $('#petAge').val('');
-			     $('#petStatus').val('AVAILABLE'); // Reset to default
-			     $('#petImage').val(''); // Clear file inpu
-				 
-				 
-            fetchPets();
-            $('#addPetModal').hide();
+            showPopup("✅ Pet added successfully!", "success");
+
+            // ✅ Reset form fields
+            $('#petName').val('');
+            $('#petType').val('');
+            $('#petBreed').val('');
+            $('#petAge').val('');
+            $('#petStatus').val('AVAILABLE'); // Reset dropdown to default
+            $('#petImage').val(''); // Clear file input
+
+            fetchPets(); // ✅ Refresh pet list
+            $('#addPetModal').hide(); // ✅ Close modal
         },
         error: function (xhr) {
             console.error("❌ Error adding pet:", xhr.responseText);
@@ -345,3 +367,5 @@ window.addPet = function () {
         }
     });
 };
+
+
