@@ -67,12 +67,13 @@ public class SecurityConfig {
                 // Role-specific API access
                 .requestMatchers("/api/dashboard/admin/**").hasRole("ADMIN")
 
-                // Regular protected API access
-            //    .requestMatchers("/api/adoptions/**").hasAnyAuthority("ADMIN", "USER")
-             // Ensure only ADMIN can modify pets
+                // Ensure only ADMIN can modify pets
                 .requestMatchers(HttpMethod.PUT, "/api/pets/**").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasAuthority("ADMIN")
-                
+
+                // ✅ Allow users to access pending requests
+                .requestMatchers("/api/adoptions/pending-requests").hasAuthority("USER")
+                .requestMatchers("/api/adoptions/**").authenticated()
                 .requestMatchers("/api/pets/**").authenticated()
                 .requestMatchers("/api/admin/adoptions/**").authenticated()
 

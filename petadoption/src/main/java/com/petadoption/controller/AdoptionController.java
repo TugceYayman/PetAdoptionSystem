@@ -1,17 +1,16 @@
 package com.petadoption.controller;
 
-import com.petadoption.model.Adoption;
-import com.petadoption.model.Pet;
-import com.petadoption.model.PetStatus;
-import com.petadoption.model.User;
-import com.petadoption.repository.AdoptionRepository;
-import com.petadoption.repository.PetRepository;
-import com.petadoption.repository.UserRepository;
-import org.springframework.security.core.Authentication;
+import com.petadoption.model.*;
+import com.petadoption.repository.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/adoptions")
@@ -27,31 +26,58 @@ public class AdoptionController {
         this.userRepository = userRepository;
     }
 
+    // ✅ Allow users to request adoption for a pet
     @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("/{petId}")
-    public Adoption requestAdoption(@PathVariable Long petId, Authentication authentication) {
-        String email = authentication.getName();
+    @PostMapping("/request/{petId}")
+    public ResponseEntity<?> requestAdoption(@PathVariable Long petId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-        Pet pet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet not found"));
+        Optional<User> userOptional = userRepository.findByEmail(userEmail);
+        Optional<Pet> petOptional = petRepository.findById(petId);
 
-        if (pet.getStatus() == PetStatus.ADOPTED) {
-            throw new RuntimeException("Pet already adopted");
+        if (userOptional.isEmpty() || petOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or Pet not found.");
         }
 
-        Adoption adoption = new Adoption();
-        adoption.setUser(user);
-        adoption.setPet(pet);
-        adoption.setStatus("PENDING");   // Use String instead of enum
+        User user = userOptional.get();
+        Pet pet = petOptional.get();
 
-        return adoptionRepository.save(adoption);
+        if (pet.getStatus() != PetStatus.AVAILABLE) { // ✅ Use Enum instead of String
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pet is already adopted.");
+        }
+
+        // ✅ Prevent duplicate requests
+        if (adoptionRepository.existsByUserAndPet(user, pet)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have already requested adoption for this pet.");
+        }
+
+        Adoption adoptionRequest = new Adoption(user, pet, AdoptionStatus.PENDING);
+        adoptionRepository.save(adoptionRequest);
+
+        return ResponseEntity.ok("Adoption request sent successfully.");
     }
 
+    // ✅ Get a user's adoption requests
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping
-    public List<Adoption> getMyAdoptions(Authentication authentication) {
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-        return adoptionRepository.findByUser(user);
+    @GetMapping("/my-requests")
+    public ResponseEntity<?> getMyAdoptionRequests(Authentication authentication) {
+        String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(adoptionRepository.findByUser(user));
+    }
+
+    // ✅ Get all pending adoption requests for the logged-in user
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/pending-requests")
+    public ResponseEntity<List<Adoption>> getPendingRequests(Authentication authentication) {
+        String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Adoption> pendingRequests = adoptionRepository.findByUserAndStatus(user, AdoptionStatus.PENDING);
+        return ResponseEntity.ok(pendingRequests);
     }
 }

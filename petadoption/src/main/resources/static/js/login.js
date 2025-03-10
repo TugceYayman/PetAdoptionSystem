@@ -50,7 +50,7 @@ $(document).ready(function () {
                     
                     // ✅ Fetch user-specific data
                     setTimeout(() => {
-                        showPets();
+						loadAvailablePets();
                     }, 500);
                 } else {
                     showErrorPopup('❌ Unknown role. Please contact support.');

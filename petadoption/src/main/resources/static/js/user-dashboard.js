@@ -18,24 +18,6 @@ $(document).ready(function () {
     });
 });
 
-// ✅ Fetch Available Pets
-function loadAvailablePets() {
-    console.log("📡 Fetching Available Pets...");
-    let token = localStorage.getItem('token');
-
-    $.ajax({
-        url: '/api/pets',
-        headers: { 'Authorization': 'Bearer ' + token },
-        success: function (pets) {
-            console.log("✅ Pets Fetched:", pets);
-            renderPets(pets);
-        },
-        error: function (xhr) {
-            console.error("❌ Error fetching pets:", xhr.responseText);
-            showErrorPopup("Failed to load pets.");
-        }
-    });
-}
 
 // ✅ Render Available Pets
 function renderPets(pets) {
@@ -146,3 +128,47 @@ function renderPendingRequests(requests) {
         container.append(requestCard);
     });
 }
+
+
+
+function showSuccessPopup(message) {
+    const popup = $('<div class="popup-message alert-success"></div>').text(message);
+    $('body').append(popup);
+
+    setTimeout(function () {
+        popup.fadeOut(function () {
+            popup.remove();
+        });
+    }, 3000);
+}
+
+function showErrorPopup(message) {
+    const popup = $('<div class="popup-message alert-danger"></div>').text(message);
+    $('body').append(popup);
+
+    setTimeout(function () {
+        popup.fadeOut(function () {
+            popup.remove();
+        });
+    }, 3000);
+}
+
+
+window.loadAvailablePets = function () {
+    console.log("📡 Fetching Available Pets...");
+    let token = localStorage.getItem('token');
+
+    $.ajax({
+        url: '/api/pets',
+        headers: { 'Authorization': 'Bearer ' + token },
+        success: function (pets) {
+            console.log("✅ Pets Fetched:", pets);
+            renderPets(pets);
+        },
+        error: function (xhr) {
+            console.error("❌ Error fetching pets:", xhr.responseText);
+            showErrorPopup("Failed to load pets.");
+        }
+    });
+};
+

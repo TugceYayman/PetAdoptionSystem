@@ -17,13 +17,13 @@ public class Adoption {
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
+    @Enumerated(EnumType.STRING)  // ✅ Stores ENUM as String in DB
     @Column(nullable = false)
-    private String status;  // PENDING, APPROVED, REJECTED as plain strings
+    private AdoptionStatus status;
 
     public Adoption() {}
 
-    public Adoption(Long id, User user, Pet pet, String status) {
-        this.id = id;
+    public Adoption(User user, Pet pet, AdoptionStatus status) {
         this.user = user;
         this.pet = pet;
         this.status = status;
@@ -54,11 +54,11 @@ public class Adoption {
         this.pet = pet;
     }
 
-    public String getStatus() {
+    public AdoptionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AdoptionStatus status) {
         this.status = status;
     }
 }

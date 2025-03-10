@@ -1,14 +1,14 @@
 package com.petadoption.controller;
 
-import com.petadoption.model.Adoption;
-import com.petadoption.model.Pet;
-import com.petadoption.model.PetStatus;
-import com.petadoption.repository.AdoptionRepository;
-import com.petadoption.repository.PetRepository;
+import com.petadoption.model.*;
+import com.petadoption.repository.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/adoptions")
@@ -22,35 +22,65 @@ public class AdminAdoptionController {
         this.petRepository = petRepository;
     }
 
+    // ✅ Get all pending adoption requests
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping
-    public List<Adoption> getAllAdoptions() {
-        return adoptionRepository.findAll();
+    @GetMapping("/pending")
+    public ResponseEntity<List<Adoption>> getPendingAdoptions() {
+        List<Adoption> pendingRequests = adoptionRepository.findByStatus(AdoptionStatus.PENDING);
+        if (pendingRequests.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(pendingRequests);
     }
 
+    // ✅ Approve an adoption request
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("/{adoptionId}/approve")
-    public Adoption approveAdoption(@PathVariable Long adoptionId) {
-        Adoption adoption = adoptionRepository.findById(adoptionId)
-                .orElseThrow(() -> new RuntimeException("Adoption not found"));
+    @PutMapping("/approve/{requestId}")
+    public ResponseEntity<?> approveAdoption(@PathVariable Long requestId) {
+        Optional<Adoption> requestOptional = adoptionRepository.findById(requestId);
 
-        adoption.setStatus("APPROVED"); // Use string status instead of enum
+        if (requestOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Adoption request not found.");
+        }
 
-        Pet pet = adoption.getPet();
-        pet.setStatus(PetStatus.ADOPTED); // The pet's status still uses PetStatus enum (this is fine)
+        Adoption adoptionRequest = requestOptional.get();
+        Pet pet = adoptionRequest.getPet();
+
+        // ✅ Ensure the pet is still available before approving
+        if (pet.getStatus() != PetStatus.AVAILABLE) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pet is no longer available for adoption.");
+        }
+
+        // ✅ Mark pet as adopted and approve adoption
+        pet.setStatus(PetStatus.ADOPTED);
+        adoptionRequest.setStatus(AdoptionStatus.APPROVED);
 
         petRepository.save(pet);
-        return adoptionRepository.save(adoption);
+        adoptionRepository.save(adoptionRequest);
+
+        return ResponseEntity.ok("Adoption approved successfully.");
     }
 
+    // ✅ Reject an adoption request
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("/{adoptionId}/reject")
-    public Adoption rejectAdoption(@PathVariable Long adoptionId) {
-        Adoption adoption = adoptionRepository.findById(adoptionId)
-                .orElseThrow(() -> new RuntimeException("Adoption not found"));
+    @PutMapping("/reject/{requestId}")
+    public ResponseEntity<?> rejectAdoption(@PathVariable Long requestId) {
+        Optional<Adoption> requestOptional = adoptionRepository.findById(requestId);
 
-        adoption.setStatus("REJECTED"); // Use string status instead of enum
+        if (requestOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Adoption request not found.");
+        }
 
-        return adoptionRepository.save(adoption);
+        Adoption adoptionRequest = requestOptional.get();
+
+        // ✅ Ensure we don’t reject already approved or rejected requests
+        if (adoptionRequest.getStatus() != AdoptionStatus.PENDING) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This request is already processed.");
+        }
+
+        adoptionRequest.setStatus(AdoptionStatus.REJECTED);
+        adoptionRepository.save(adoptionRequest);
+
+        return ResponseEntity.ok("Adoption request rejected.");
     }
 }
