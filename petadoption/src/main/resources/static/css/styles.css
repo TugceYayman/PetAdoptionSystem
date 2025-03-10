@@ -220,6 +220,94 @@
     color: white;
 }
 
+
+
+/* ✅ Sidebar - Fixed and Properly Spaced */
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    background: #f8f9fa;
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Sidebar Title */
+.sidebar h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ✅ Sidebar Buttons */
+.sidebar .btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* ✅ Main Content Wrapper */
+.main-content {
+    margin-left: 270px; /* Pushes the content to the right so it doesn't overlap */
+    padding: 20px;
+}
+
+/* ✅ Adjust spacing between the pet list and sidebar */
+.pets-container {
+    margin-top: 40px;
+    padding-left: 10px;
+}
+
+/* ✅ Pet Cards */
+.pet-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 15px;
+    width: 250px;
+}
+
+/* ✅ Pet Card Images */
+.pet-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ✅ Fix Flex Layout */
+#petsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-left: 30px; /* Ensures gap between menu and pet list */
+}
+
+/* ✅ Responsive Fix for Small Screens */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    #petsContainer {
+        margin-left: 0;
+    }
+}
+
+
+
 /* ✅ Responsive Fixes */
 @media (max-width: 992px) {
     .pet-card {

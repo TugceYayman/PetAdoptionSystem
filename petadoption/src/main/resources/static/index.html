@@ -97,11 +97,36 @@
             </div>
         </div>
 
-        <!-- ========== USER PET LIST PAGE ========== -->
-        <div id="petListPage" class="page d-none">
-            <h1>Meet Our Adorable Pets! 🐾</h1>
-            <div class="pet-list" id="petList"></div>
-        </div>
+		<!-- ========== USER DASHBOARD PAGE ========== -->
+		<div id="userDashboardPage" class="page d-none">
+		    <div class="container-fluid">
+		        <div class="row">
+		            <!-- ✅ Sidebar Navigation -->
+		            <div class="col-md-3 sidebar bg-light">
+		                <h4 class="text-center mt-3">🐾 Menu</h4>
+		                <ul class="nav flex-column">
+		                    <li class="nav-item">
+		                        <button class="btn btn-primary w-100 mb-2" id="viewPetsBtn">🐶 View Pets</button>
+		                    </li>
+		                    <li class="nav-item">
+		                        <button class="btn btn-warning w-100 mb-2" id="myPetsBtn">🏠 My Pets</button>
+		                    </li>
+		                    <li class="nav-item">
+		                        <button class="btn btn-info w-100 mb-2" id="pendingRequestsBtn">⏳ Pending Requests</button>
+		                    </li>
+		                </ul>
+		            </div>
+
+		            <!-- ✅ Main Content Area (Properly Aligned) -->
+		            <div class="col-md-9 main-content">
+		                <h2 class="text-center">Available Pets for Adoption</h2>
+		                <div id="petsContainer" class="pets-container d-flex flex-wrap justify-content-center gap-3"></div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
+
 
         <!-- ========== MY ADOPTIONS PAGE ========== -->
         <div id="myAdoptionsPage" class="page d-none">
@@ -113,7 +138,7 @@
     <!-- Ensure Scripts Load After Content -->
     <script src="js/login.js"></script>
     <script src="js/admin-dashboard.js"></script>
-    <script src="js/index.js"></script>
+	<script src="js/user-dashboard.js"></script> <!-- ✅ New User JS -->
     <script src="js/my-adoptions.js"></script>
     <script src="js/register.js"></script>
 

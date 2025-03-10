@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Show login page initially
+    // ✅ Show login page initially
     switchToPage('loginPage');
 
     $('#goToRegister').on('click', function (e) {
@@ -12,6 +12,7 @@ $(document).ready(function () {
         switchToPage('loginPage');
     });
 
+    // ✅ Handle login form submission
     $('#loginForm').on('submit', function (e) {
         e.preventDefault();
 
@@ -19,7 +20,7 @@ $(document).ready(function () {
         const password = $('#loginPassword').val().trim();
 
         if (!email || !password) {
-            showErrorPopup('Please enter both email and password.');
+            showErrorPopup('⚠️ Please enter both email and password.');
             return;
         }
 
@@ -32,24 +33,31 @@ $(document).ready(function () {
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('userRole', response.role);
 
-                showSuccessPopup('Login successful!');
+                showSuccessPopup('✅ Login successful!');
 
                 if (response.role === 'ADMIN') {
                     switchToPage('adminDashboardPage');
                     console.log("✅ Admin logged in, fetching dashboard data...");
 
-                    // ✅ Fetch data after token is stored
+                    // ✅ Fetch admin-specific data
                     setTimeout(() => {
                         fetchPets();
                         fetchAdoptions();
                     }, 500);
+                } else if (response.role === 'USER') {
+                    switchToPage('userDashboardPage');
+                    console.log("✅ User logged in, fetching available pets...");
+                    
+                    // ✅ Fetch user-specific data
+                    setTimeout(() => {
+                        showPets();
+                    }, 500);
                 } else {
-                    switchToPage('petListPage');
-                    loadPets();
+                    showErrorPopup('❌ Unknown role. Please contact support.');
                 }
             },
             error: function (xhr) {
-                const errorMessage = xhr.responseText || 'Login failed. Please check your credentials.';
+                const errorMessage = xhr.responseText || '❌ Login failed. Please check your credentials.';
                 showErrorPopup(`Login failed: ${errorMessage}`);
             }
         });
@@ -59,7 +67,7 @@ $(document).ready(function () {
         $('.page').hide();
         $('#' + pageId).removeClass('d-none').show();
     }
-    
+
     function showErrorPopup(message) {
         alert(message);
     }
