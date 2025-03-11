@@ -5,6 +5,7 @@ import com.petadoption.model.AdoptionStatus;
 import com.petadoption.model.Pet;
 import com.petadoption.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     List<Adoption> findByUserAndStatus(User user, AdoptionStatus status);
     
     Optional<Adoption> findByUserAndPetAndStatus(User user, Pet pet, AdoptionStatus status);
+    
+    @Query("SELECT a FROM Adoption a JOIN FETCH a.user u JOIN FETCH a.pet p")
+    List<Adoption> findAllAdoptionsWithDetails();
 
 
 

@@ -12,18 +12,24 @@ $(document).ready(function () {
 		        window.location.href = "index.html";
 		    }
 		}
-
+		
+		$("#viewAdoptionListBtn").off().on("click", function () {
+		        showAdminSection("adoptionListSection");
+		        loadAdoptionList();
+		    });
 
 	    // ✅ Sidebar Navigation
 	    $('#viewPendingRequestsBtn').on('click', function () {
 	        $('#pendingRequestsSection').removeClass('d-none');
 	        $('#managePetsSection').addClass('d-none');
+			$('#adoptionListSection').addClass('d-none');
 	        fetchPendingRequests();
 	    });
 
 	    $('#managePetsBtn').on('click', function () {
 	        $('#managePetsSection').removeClass('d-none');
 	        $('#pendingRequestsSection').addClass('d-none');
+			$('#adoptionListSection').addClass('d-none');
 	        fetchPets();
 	    });
 		
@@ -64,6 +70,68 @@ $(document).ready(function () {
     fetchPets();
     fetchAdoptions();
 });
+
+function showAdminSection(sectionId) {
+    console.log(`🔄 Switching to: ${sectionId}`);
+
+    // Hide all sections first
+    $("#pendingRequestsSection, #managePetsSection, #adoptionListSection").addClass("d-none");
+
+    // Ensure the selected section is shown
+    $("#" + sectionId).removeClass("d-none").css({
+        "display": "block",
+        "transition": "opacity 0.3s ease-in-out",
+        "opacity": "1"
+    });
+
+    console.log(`✅ Section ${sectionId} is now visible.`);
+}
+
+
+function loadAdoptionList() {
+       console.log("📡 Fetching Adoption List...");
+       let token = localStorage.getItem("token");
+
+       $.ajax({
+           url: "/api/admin/adoptions/adoption-list",
+           headers: { "Authorization": "Bearer " + token },
+           success: function (adoptions) {
+               console.log("✅ Adoption List Fetched:", adoptions);
+               renderAdoptionList(adoptions);
+           },
+           error: function (xhr) {
+               console.error("❌ Error fetching adoption list:", xhr.responseText);
+               displayErrorPopup("❌ Failed to load adoption list.");
+           }
+       });
+   }
+
+   function renderAdoptionList(adoptions) {
+       console.log("📌 Rendering Adoption List:", adoptions);
+       const container = $("#adoptionListTable tbody");
+       container.empty();
+
+       if (adoptions.length === 0) {
+           container.html('<tr><td colspan="6" class="text-center">No adoptions found.</td></tr>');
+           return;
+       }
+
+       adoptions.forEach(adoption => {
+           const row = `
+               <tr>
+                   <td>${adoption.adopterName}</td>
+                   <td>${adoption.adopterEmail}</td>
+                   <td>${adoption.petName}</td>
+                   <td>${adoption.petType}</td>
+                   <td>${adoption.petBreed}</td>
+                   <td><span class="badge bg-${adoption.adoptionStatus === 'APPROVED' ? 'success' : 'warning'}">
+                       ${adoption.adoptionStatus}
+                   </span></td>
+               </tr>
+           `;
+           container.append(row);
+       });
+   }
 
 // ✅ Add Pet with File Upload
 function addPet() {

@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -83,4 +86,28 @@ public class AdminAdoptionController {
 
         return ResponseEntity.ok("Adoption request rejected.");
     }
+    
+    
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/adoption-list")
+    public ResponseEntity<List<Map<String, Object>>> getAllAdoptions() {
+        List<Adoption> adoptions = adoptionRepository.findAllAdoptionsWithDetails();
+        List<Map<String, Object>> adoptionList = new ArrayList<>();
+
+        for (Adoption adoption : adoptions) {
+            Map<String, Object> adoptionData = new HashMap<>();
+            adoptionData.put("adopterName", adoption.getUser().getName());
+            adoptionData.put("adopterEmail", adoption.getUser().getEmail());
+            adoptionData.put("petName", adoption.getPet().getName());
+            adoptionData.put("petType", adoption.getPet().getType());
+            adoptionData.put("petBreed", adoption.getPet().getBreed());
+            adoptionData.put("adoptionStatus", adoption.getStatus().toString());
+
+            adoptionList.add(adoptionData);
+        }
+
+        return ResponseEntity.ok(adoptionList);
+    }
+
+
 }
