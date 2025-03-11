@@ -115,8 +115,16 @@ $(document).ready(function () {
 		
 		if (pageId === 'loginPage' || pageId === 'registerPage') {
 		        $('body').addClass('auth-background'); // Apply background
+				// ✅ Add Rabbit if not already there
+				  if ($('.floating-rabbit').length === 0) {
+					$('body').append('<img src="/img/rabbit(1).png" class="floating-rabbit" alt="Jumping Rabbit">');
+					startRabbitAnimation();
+
+				}
 		    } else {
 		        $('body').removeClass('auth-background'); // Remove background for other pages
+				$('.floating-rabbit').remove();
+
 		    }
 
         if (pageId === 'userDashboardPage') {
@@ -125,6 +133,23 @@ $(document).ready(function () {
             $(".dashboard-container").addClass("d-none");
         }
     }
+	
+	function startRabbitAnimation() {
+	    let rabbit = $('.floating-rabbit');
+
+	    if (!rabbit.length) return;
+
+	    function moveRabbit() {
+	        rabbit.css({ left: '-100px' }); // Start from left off-screen
+	        rabbit.animate({ left: '100%' }, 5000, 'linear', function () {
+	            moveRabbit(); // Restart after exiting right
+	        });
+	    }
+
+	    moveRabbit(); // Start the movement loop
+	}
+
+
 
     // ✅ Initialize User Dashboard
     function initializeUserDashboard() {

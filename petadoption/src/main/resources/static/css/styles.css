@@ -167,13 +167,19 @@ html, body {
     height: 100%;
     margin: 0;
     overflow-y: auto;
+	overflow-x: hidden; /* ✅ Prevents all horizontal scrolling */
+
 }
 
 body.auth-background {
 background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1360' height='560' preserveAspectRatio='none' viewBox='0 0 1360 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1102%26quot%3b)' fill='none'%3e%3crect width='1360' height='560' x='0' y='0' fill='rgba(255%2c 255%2c 255%2c 1)'%3e%3c/rect%3e%3cpath d='M590.041%2c88.447C613.402%2c89.262%2c636.998%2c79.135%2c648.3%2c58.674C659.302%2c38.756%2c652.281%2c15.369%2c641.464%2c-4.651C629.915%2c-26.027%2c614.326%2c-48.378%2c590.041%2c-49.156C564.831%2c-49.964%2c543.79%2c-30.732%2c532.576%2c-8.139C522.529%2c12.102%2c526.866%2c35.421%2c538.42%2c54.841C549.672%2c73.753%2c568.048%2c87.68%2c590.041%2c88.447' fill='rgba(231%2c 137%2c 66%2c 1)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M361.625%2c368.692C378.307%2c368.639%2c389.914%2c354.198%2c398.277%2c339.763C406.669%2c325.278%2c413.346%2c308.068%2c405.23%2c293.427C396.936%2c278.465%2c378.73%2c273.367%2c361.625%2c273.64C345.063%2c273.904%2c328.438%2c280.317%2c320.362%2c294.779C312.452%2c308.944%2c316.662%2c325.829%2c324.57%2c339.995C332.732%2c354.615%2c344.881%2c368.745%2c361.625%2c368.692' fill='rgba(231%2c 137%2c 66%2c 1)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M660.888%2c11.375C675.412%2c11.043%2c686.27%2c0.29%2c694.282%2c-11.829C703.555%2c-25.856%2c713.403%2c-42.087%2c706.308%2c-57.332C698.4%2c-74.323%2c679.628%2c-83.788%2c660.888%2c-83.577C642.496%2c-83.37%2c625.338%2c-72.826%2c617.206%2c-56.328C609.83%2c-41.362%2c615.695%2c-24.259%2c624.741%2c-10.239C632.899%2c2.405%2c645.845%2c11.719%2c660.888%2c11.375' fill='rgba(231%2c 137%2c 66%2c 1)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M101.859%2c666.595C145.816%2c665.922%2c188.204%2c643.329%2c207.778%2c603.965C225.708%2c567.908%2c208.901%2c527.505%2c188.2%2c492.964C168.271%2c459.711%2c140.546%2c429.738%2c101.859%2c427.232C58.896%2c424.449%2c16.39%2c443.779%2c-6.304%2c480.365C-30.217%2c518.917%2c-32.617%2c568.069%2c-9.833%2c607.298C12.858%2c646.366%2c56.685%2c667.287%2c101.859%2c666.595' fill='rgba(231%2c 137%2c 66%2c 1)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M617.106%2c552.098C661.958%2c551.719%2c708.55%2c542.352%2c733.522%2c505.092C761.281%2c463.674%2c766.174%2c409.38%2c741.973%2c365.787C717.116%2c321.013%2c668.272%2c293.252%2c617.106%2c295.393C569.105%2c297.402%2c532.791%2c333.726%2c509.118%2c375.532C485.864%2c416.597%2c472.607%2c466.83%2c497.23%2c507.089C521.099%2c546.116%2c571.361%2c552.485%2c617.106%2c552.098' fill='rgba(231%2c 137%2c 66%2c 1)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1070.933%2c520.656C1118.881%2c521.517%2c1168.344%2c505.307%2c1192.59%2c463.931C1217.059%2c422.174%2c1207.087%2c370.967%2c1183.372%2c328.777C1159.084%2c285.569%2c1120.491%2c248.393%2c1070.933%2c247.504C1020.087%2c246.592%2c975.405%2c279.845%2c951.286%2c324.615C928.38%2c367.133%2c931.461%2c418.467%2c956.621%2c459.692C980.734%2c499.2%2c1024.655%2c519.825%2c1070.933%2c520.656' fill='rgba(231%2c 137%2c 66%2c 1)' class='triangle-float1'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1102'%3e%3crect width='1360' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3cstyle%3e %40keyframes float1 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-10px%2c 0)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float1 %7b animation: float1 5s infinite%3b %7d %40keyframes float2 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-5px%2c -5px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float2 %7b animation: float2 4s infinite%3b %7d %40keyframes float3 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(0%2c -10px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float3 %7b animation: float3 6s infinite%3b %7d %3c/style%3e%3c/defs%3e%3c/svg%3e");    
 background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;}
+background-position: center;
+background-repeat: no-repeat;
+width:100%;
+overflow-x: hidden;
+
+}
 
 #userDashboardPage {
     height: 100%;
@@ -382,6 +388,39 @@ h2.text-center {
     text-align: center;
     display: none; /* Hide initially */
 }
+/* Rabbit Floating & Jumping */
+.floating-rabbit {
+	max-width: 150px; /* ✅ Adjust this based on your image */
+
+    position: absolute;
+	width: auto;
+    height: auto;
+    bottom: 50px;
+    left: -100px; /* Start off-screen on the left */
+    transform: translateX(0%);
+    animation: jump 1.5s infinite ease-in-out, moveAcross 5s infinite linear;
+}
+
+/* 🐰 Jumping Animation */
+@keyframes jump {
+    0%, 100% {
+        bottom: 50px;
+    }
+    50% {
+        bottom: 200px; /* Adjust height of the jump */
+    }
+}
+
+/* ➡️ Move Right & Reappear from Left */
+@keyframes moveAcross {
+    0% {
+        left: -100px; /* ✅ Start slightly outside the left edge */
+    }
+    100% {
+        left: calc(100vw + 50px); /* ✅ Stops at the edge without overflow */
+    }
+}
+
 
 /* ============================ */
 /* ✅ Responsive Fixes */
