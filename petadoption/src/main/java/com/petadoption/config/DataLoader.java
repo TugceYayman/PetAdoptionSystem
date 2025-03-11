@@ -26,12 +26,28 @@ public class DataLoader {
         return args -> {
             // Load sample pets (only if no pets exist)
             if (petRepository.count() == 0) {
-                List<Pet> pets = List.of(
-                    new Pet(null, "Buddy", "Dog", "Golden Retriever", 2, PetStatus.AVAILABLE, "https://example.com/dog1.jpg"),
-                    new Pet(null, "Whiskers", "Cat", "Persian", 3, PetStatus.AVAILABLE, "https://example.com/cat1.jpg"),
-                    new Pet(null, "Charlie", "Dog", "Labrador", 1, PetStatus.AVAILABLE, "https://example.com/dog2.jpg"),
-                    new Pet(null, "Luna", "Cat", "Siamese", 4, PetStatus.AVAILABLE, "https://example.com/cat2.jpg")
-                );
+            	List<Pet> pets = List.of(
+            		    // 🐶 Dogs
+            		    new Pet(null, "Buddy", "Dog", "Golden Retriever", 2, PetStatus.AVAILABLE, "/uploads/dog1.jpg"),
+            		    new Pet(null, "Max", "Dog", "Labrador Retriever", 3, PetStatus.AVAILABLE, "/uploads/dog2.jpg"),
+            		    new Pet(null, "Bella", "Dog", "Beagle", 4, PetStatus.AVAILABLE, "/uploads/dog3.jpg"),
+            		    new Pet(null, "Rocky", "Dog", "Bulldog", 1, PetStatus.AVAILABLE, "/uploads/dog4.jpg"),
+            		    new Pet(null, "Charlie", "Dog", "Poodle", 5, PetStatus.AVAILABLE, "/uploads/dog5.jpg"),
+
+            		    // 🐱 Cats
+            		    new Pet(null, "Whiskers", "Cat", "Persian", 3, PetStatus.AVAILABLE, "/uploads/cat1.jpg"),
+            		    new Pet(null, "Mittens", "Cat", "Siamese", 2, PetStatus.AVAILABLE, "/uploads/cat2.jpg"),
+            		    new Pet(null, "Shadow", "Cat", "Maine Coon", 4, PetStatus.AVAILABLE, "/uploads/cat3.jpg"),
+            		    new Pet(null, "Luna", "Cat", "Bengal", 1, PetStatus.AVAILABLE, "/uploads/cat4.jpg"),
+            		    new Pet(null, "Simba", "Cat", "Scottish Fold", 3, PetStatus.AVAILABLE, "/uploads/cat5.jpg"),
+
+            		    // 🐰 Rabbits
+            		    new Pet(null, "Thumper", "Rabbit", "Holland Lop", 2, PetStatus.AVAILABLE, "/uploads/rabbit1.jpg"),
+            		    new Pet(null, "Coco", "Rabbit", "Netherland Dwarf", 1, PetStatus.AVAILABLE, "/uploads/rabbit2.jpg"),
+            		    new Pet(null, "Snowball", "Rabbit", "Lionhead", 3, PetStatus.AVAILABLE, "/uploads/rabbit3.jpg")
+            		 
+            		);
+
                 petRepository.saveAll(pets);
                 System.out.println("🐾 Sample pets loaded into the database!");
             }

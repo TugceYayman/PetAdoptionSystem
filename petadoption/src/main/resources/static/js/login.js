@@ -194,6 +194,8 @@ $(document).ready(function () {
             console.warn("🚨 Admin Dashboard is hidden. Skipping initialization.");
             return;
         }
+		
+		$("#pendingRequestsSection, #adoptionListSection, #animalDistributionSection, #managePetsSection").addClass("d-none");
 
         // ✅ Load Pets and Adoptions when Admin logs in
         $('#managePetsSection').removeClass('d-none');
