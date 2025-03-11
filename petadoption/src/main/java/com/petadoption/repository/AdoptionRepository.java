@@ -4,8 +4,13 @@ import com.petadoption.model.Adoption;
 import com.petadoption.model.AdoptionStatus;
 import com.petadoption.model.Pet;
 import com.petadoption.model.User;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +34,12 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     List<Adoption> findByUserAndStatus(User user, AdoptionStatus status);
     
     boolean existsByUserAndPetAndStatusIn(User user, Pet pet, List<AdoptionStatus> statuses);
+
+    
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Adoption a WHERE a.pet.id = :petId")
+    void deleteByPetId(@Param("petId") Long petId);
 
     
     Optional<Adoption> findByUserAndPetAndStatus(User user, Pet pet, AdoptionStatus status);

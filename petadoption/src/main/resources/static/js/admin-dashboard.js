@@ -437,7 +437,7 @@ function confirmRemovePet(petId) {
 
 window.removePet = function (petId) {
     let token = localStorage.getItem('token');
-    
+
     if (!token) {
         console.error("🚨 No authentication token found. Redirecting to login...");
         alert("Session expired. Please log in again.");
@@ -445,9 +445,9 @@ window.removePet = function (petId) {
         return;
     }
 
-	console.log("📝 Sending DELETE request to:", `/api/pets/${petId}`);
-	console.log("🔑 Authorization Header:", `Bearer ${token}`);
-	
+    console.log("📝 Sending DELETE request to:", `/api/pets/${petId}`);
+    console.log("🔑 Authorization Header:", `Bearer ${token}`);
+
     $.ajax({
         url: `/api/pets/${petId}`,
         type: 'DELETE',
@@ -462,6 +462,7 @@ window.removePet = function (petId) {
         }
     });
 };
+
 
 // ✅ Add Pet with Image Upload
 // ✅ Add Pet with File Upload

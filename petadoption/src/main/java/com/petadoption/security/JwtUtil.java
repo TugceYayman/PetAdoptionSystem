@@ -5,8 +5,11 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -38,9 +41,22 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    public String getRoleFromToken(String token) {
-        return extractAllClaims(token).get("role", String.class);
+    public List<String> getRolesFromToken(String token) {
+        Claims claims = extractAllClaims(token);
+        Object rolesObject = claims.get("role");
+
+        if (rolesObject instanceof List<?>) {
+            return ((List<?>) rolesObject).stream()
+                    .map(Object::toString)  // Ensure all elements are Strings
+                    .collect(Collectors.toList());
+        } else if (rolesObject instanceof String) {
+            return List.of(rolesObject.toString()); // Handle single role as String
+        } else {
+            return new ArrayList<>();
+        }
     }
+
+
 
     public Claims extractAllClaims(String token) {
         try {

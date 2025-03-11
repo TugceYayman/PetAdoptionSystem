@@ -3,8 +3,11 @@ package com.petadoption.controller;
 import com.petadoption.model.Pet;
 import com.petadoption.model.PetStatus;
 import com.petadoption.model.PetUpdateRequest;
+import com.petadoption.repository.AdoptionRepository;
 import com.petadoption.repository.PetRepository;
 import com.petadoption.service.FileStorageService;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +26,13 @@ public class PetController {
     private FileStorageService fileStorageService;
 
     private final PetRepository petRepository;
+    
+    private final AdoptionRepository adoptionRepository;
 
-    public PetController(FileStorageService fileStorageService, PetRepository petRepository) {
+    public PetController(FileStorageService fileStorageService, PetRepository petRepository, AdoptionRepository adoptionRepository) {
         this.fileStorageService = fileStorageService;
         this.petRepository = petRepository;
+        this.adoptionRepository = adoptionRepository;
     }
 
     @GetMapping
@@ -109,17 +115,22 @@ public class PetController {
 
 
 
-
-
+    @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePet(@PathVariable Long id) {
         if (!petRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pet not found.");
         }
-        
+
+        // ✅ Step 1: Delete related adoption records first
+        adoptionRepository.deleteByPetId(id);
+
+        // ✅ Step 2: Delete the pet itself
         petRepository.deleteById(id);
+
         return ResponseEntity.ok("✅ Pet deleted successfully!");
     }
+
 
 }
