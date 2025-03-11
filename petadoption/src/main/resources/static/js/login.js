@@ -91,7 +91,11 @@ $(document).ready(function () {
 	function initializeUserDashboard() {
 	    console.log("🔄 Initializing User Dashboard...");
 
-	    // ✅ Ensure User Dashboard is Visible
+	    if (typeof showSection !== "function") {
+	        console.error("❌ showSection is not defined. Ensure user-dashboard.js is loaded first.");
+	        return;
+	    }
+
 	    $(".dashboard-container").removeClass("d-none");
 
 	    // ✅ Load Available Pets as Default View
@@ -119,6 +123,7 @@ $(document).ready(function () {
 	        loadPendingRequests();
 	    });
 	}
+
 
 
     function showErrorPopup(message) {

@@ -1,15 +1,86 @@
+// ✅ Declare Function at Global Scope
+window.showSection = function (sectionId) {
+    console.log(`🔄 Showing ${sectionId}`);
+
+    $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
+
+    $("#" + sectionId).removeClass("d-none").css({
+        "display": "flex",
+        "flex-direction": "column",
+        "justify-content": "flex-start",
+        "align-items": "center",
+    });
+
+    console.log(`✅ Section ${sectionId} displayed.`);
+};
+
+
+// ✅ Load My Adopted Pets
+window.loadMyPets = function () {
+    console.log("📡 Fetching My Pets...");
+    let token = localStorage.getItem("token");
+
+    $.ajax({
+        url: "/api/adoptions/my-pets",
+        headers: { "Authorization": "Bearer " + token },
+        success: function (pets) {
+            console.log("✅ My Pets Fetched:", pets);
+            renderMyPets(pets);
+        },
+        error: function (xhr) {
+            console.error("❌ Error fetching my pets:", xhr.responseText);
+            displayErrorPopup("❌ Failed to load adopted pets.");
+        }
+    });
+};
+
+// ✅ Render My Adopted Pets
+window.renderMyPets = function (pets) {
+    console.log("📌 Rendering My Pets:", pets);
+    const container = $("#myPetsList");
+    container.empty();
+
+    if (pets.length === 0) {
+        container.html('<p class="text-center">You have no adopted pets yet.</p>');
+        return;
+    }
+
+    pets.forEach(pet => {
+        const petCard = `
+            <div class="col-md-4 d-flex align-items-stretch">
+                <div class="card user-pet-card shadow-sm p-3 rounded w-100">
+                    <img src="${pet.imageUrl || 'default-image.jpg'}" class="card-img-top rounded" alt="${pet.name}">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title text-danger">${pet.name}</h5>
+                        <p><strong>Type:</strong> ${pet.type}</p>
+                        <p><strong>Breed:</strong> ${pet.breed}</p>
+                        <p><strong>Age:</strong> ${pet.age} years</p>
+                        <button class="btn btn-danger unadopt-pet w-100" data-id="${pet.id}">
+                            ❌ Un-Adopt
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.append(petCard);
+    });
+
+    // ✅ Handle unadoption action
+    $(".unadopt-pet").off().on("click", function () {
+        let petId = $(this).data("id");
+        unadoptPet(petId);
+    });
+
+    container.addClass("show");
+};
+
+
 $(document).ready(function () {
     console.log("✅ User Dashboard Loaded");
 
-	
-	setTimeout(() => {
-	        if ($("#petsContainer, #myPetsContainer, #pendingRequestsContainer").length === 0) {
-	            console.error("❌ Dashboard sections not found in the DOM.");
-	        } else {
-	            console.log("✅ Dashboard sections exist.");
-	        }
-	    }, 1000);
-		
+    $(".dashboard-container").css("height", "100vh");
+    $(".main-content").css("height", "100vh");
+
     let token = localStorage.getItem('token');
 
     if (!token) {
@@ -18,13 +89,8 @@ $(document).ready(function () {
         return;
     }
 
-	if (localStorage.getItem('token')) {
-	    $(".dashboard-container").removeClass("d-none");
-	} else {
-	    $(".dashboard-container").addClass("d-none"); // ✅ Ensure it stays hidden before login
-	}
+    $(".dashboard-container").removeClass("d-none");
 
-    
     // ✅ Load Available Pets Initially
     showSection("petsContainer");
     loadAvailablePets();
@@ -54,21 +120,7 @@ $(document).ready(function () {
     });
 });
 
-// ✅ Function to Show Sections
-function showSection(sectionId) {
-    console.log(`🔄 Showing ${sectionId}`);
-
-    // Hide all sections first
-    $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
-
-    // Ensure the target section is visible
-    $("#" + sectionId).removeClass("d-none").css({ "display": "block", "visibility": "visible" });
-
-    console.log(`✅ Section ${sectionId} displayed.`);
-}
-
-
-// ✅ Load Available Pets (Now Using Sidebar Layout)
+// ✅ Load Available Pets
 function loadAvailablePets() {
     console.log("📡 Fetching Available Pets...");
     let token = localStorage.getItem("token");
@@ -79,7 +131,6 @@ function loadAvailablePets() {
         success: function (pets) {
             console.log("✅ Pets Fetched:", pets);
 
-            // ✅ Filter out pets that are NOT available
             let availablePets = pets.filter(pet => pet.status === "AVAILABLE");
 
             if (availablePets.length === 0) {
@@ -95,21 +146,18 @@ function loadAvailablePets() {
     });
 }
 
-
-// ✅ Render Available Pets (Aligned with Admin Section)
+// ✅ Render Available Pets
 function renderPets(pets) {
     console.log("📌 Rendering Pets:", pets);
     const container = $("#availablePetsList");
     container.empty();
 
     if (pets.length === 0) {
-        console.warn("⚠️ No pets available.");
         container.html('<p class="text-center">No pets available for adoption.</p>');
         return;
     }
 
     pets.forEach(pet => {
-        console.log("✅ Adding pet:", pet.name);
         const petCard = `
             <div class="col-md-4">
                 <div class="card pet-card">
@@ -129,7 +177,6 @@ function renderPets(pets) {
         container.append(petCard);
     });
 
-    // ✅ Attach click event to newly created buttons
     $(".request-adoption").off().on("click", function () {
         let petId = $(this).data("id");
         requestAdoption(petId);
@@ -138,137 +185,66 @@ function renderPets(pets) {
     container.addClass("show");
 }
 
-
+// ✅ Send Adoption Request with Duplicate Check
 function requestAdoption(petId) {
     console.log(`📡 Sending adoption request for pet ID: ${petId}`);
     let token = localStorage.getItem("token");
 
     $.ajax({
-        url: `/api/adoptions/request/${petId}`,  // ✅ Matches backend API
+        url: `/api/adoptions/request/${petId}`,
         type: "POST",
         headers: { "Authorization": "Bearer " + token },
         success: function (response) {
             console.log("✅ Adoption request successful:", response);
-            showSuccessPopup("✅ Adoption request sent successfully!");
+            displaySuccessPopup("✅ Adoption request sent successfully!");
 
-            // ✅ Refresh Available Pets & Pending Requests
             loadAvailablePets();
             loadPendingRequests();
         },
         error: function (xhr) {
             console.error("❌ Error requesting adoption:", xhr.responseText);
 
-            if (xhr.status === 400 && xhr.responseText.includes("already requested adoption")) {
-                showErrorPopup("❌ You have already requested adoption for this pet.");
-            } else {
-                showErrorPopup(xhr.responseText || "❌ Failed to request adoption. Please try again.");
+            let errorMessage = "❌ Failed to request adoption. Please try again.";
+
+            if (xhr.status === 400) {
+                if (xhr.getResponseHeader("content-type")?.includes("application/json")) {
+                    try {
+                        let responseJson = JSON.parse(xhr.responseText);
+                        if (responseJson.message.includes("already requested adoption")) {
+                            errorMessage = "❌ You have already requested adoption for this pet.";
+                        }
+                    } catch (e) {
+                        console.error("⚠️ Failed to parse JSON response:", e);
+                    }
+                } else {
+                    errorMessage = xhr.responseText;
+                }
             }
+
+            displayErrorPopup(errorMessage);
         }
     });
 }
 
-
-
-
-// ✅ Load My Pets (for Adopted Pets)
-function loadMyPets() {
-    console.log("📡 Fetching My Pets...");
-    let token = localStorage.getItem("token");
-
-    $.ajax({
-        url: "/api/adoptions/my-pets",  // ✅ Matches backend API
-        headers: { "Authorization": "Bearer " + token },
-        success: function (pets) {
-            console.log("✅ My Pets Fetched:", pets);
-            renderMyPets(pets);
-        },
-        error: function (xhr) {
-            console.error("❌ Error fetching my pets:", xhr.responseText);
-            showErrorPopup("❌ Failed to load adopted pets.");
-        }
-    });
-}
-
-// ✅ Render My Pets (Includes 'Un-adopt' Option)
-function renderMyPets(pets) {
-    const container = $("#myPetsList");
-    container.empty();
-
-    if (pets.length === 0) {
-        container.html('<p class="text-center">You have no adopted pets yet.</p>');
-        return;
-    }
-
-    pets.forEach(pet => {
-        const petCard = `
-            <div class="col-md-4 d-flex align-items-stretch">
-                <div class="card user-pet-card shadow-sm p-3 rounded w-100">
-                    <img src="${pet.imageUrl || 'default-image.jpg'}" class="card-img-top rounded" alt="${pet.name}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <h5 class="card-title text-danger">${pet.name}</h5>
-                            <p><strong>Type:</strong> ${pet.type}</p>
-                            <p><strong>Breed:</strong> ${pet.breed}</p>
-                            <p><strong>Age:</strong> ${pet.age} years</p>
-                        </div>
-                        <div class="mt-auto">
-                            <button class="btn btn-danger unadopt-pet w-100" data-id="${pet.id}">
-                                ❌ Un-Adopt
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.append(petCard);
-    });
-
-    $(document).off('click', '.unadopt-pet').on('click', '.unadopt-pet', function () {
-        unadoptPet($(this).data('id'));
-    });
-}
-
-// ✅ Un-adopt a Pet (Change Status)
-function unadoptPet(petId) {
-    let token = localStorage.getItem('token');
-
-    $.ajax({
-        url: `/api/adoptions/unadopt/${petId}`,
-        type: 'POST',
-        headers: { 'Authorization': 'Bearer ' + token },
-        success: function () {
-            showSuccessPopup("✅ Pet has been un-adopted!");
-            loadMyPets();
-            loadAvailablePets();
-        },
-        error: function (xhr) {
-            console.error("❌ Error un-adopting pet:", xhr.responseText);
-            showErrorPopup("Failed to un-adopt the pet.");
-        }
-    });
-}
-
-// ✅ Fetch Pending Requests for Logged-in User
+// ✅ Load Pending Requests
 function loadPendingRequests() {
     console.log("📡 Fetching Pending Requests...");
     let token = localStorage.getItem("token");
 
     $.ajax({
-        url: "/api/adoptions/pending-requests",  // ✅ Matches backend API
+        url: "/api/adoptions/pending-requests",
         headers: { "Authorization": "Bearer " + token },
         success: function (requests) {
-            console.log("✅ Pending Requests Fetched:", requests);
             renderPendingRequests(requests);
         },
         error: function (xhr) {
             console.error("❌ Error fetching pending requests:", xhr.responseText);
-            showErrorPopup("❌ Failed to load pending requests.");
+            displayErrorPopup("❌ Failed to load pending requests.");
         }
     });
 }
 
-
-// ✅ Render Pending Requests
+// ✅ Render Pending Adoption Requests
 function renderPendingRequests(requests) {
     const container = $("#pendingRequestsList");
     container.empty();
@@ -279,26 +255,24 @@ function renderPendingRequests(requests) {
     }
 
     let requestCards = requests.map(request => `
-        <div class="col-md-4 d-flex align-items-stretch">
-            <div id=pendingRequestCard class="card shadow-sm p-3 rounded w-100 text-center">
-                <div class="card-body">
-                    <h5 class="card-title">${request.pet.name}</h5>
-                    <p><strong>Status:</strong> <span class="badge bg-warning">${request.status}</span></p>
-                </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 rounded text-center">
+                <h5 class="card-title">${request.pet.name}</h5>
+                <p><strong>Status:</strong> <span class="badge bg-warning">${request.status}</span></p>
             </div>
         </div>
     `).join("");
 
-    container.html(`<div class="row g-3">${requestCards}</div>`);
+    container.html(requestCards);
 }
 
-
-// ✅ Success Popup
-function showSuccessPopup(message) {
+// ✅ Popups
+function displayErrorPopup(message) {
+    console.log(`🛑 Showing error popup: ${message}`);
     alert(message);
 }
 
-// ✅ Error Popup
-function showErrorPopup(message) {
+function displaySuccessPopup(message) {
+    console.log(`✅ Showing success popup: ${message}`);
     alert(message);
 }
