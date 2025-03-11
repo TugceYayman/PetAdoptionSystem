@@ -503,8 +503,6 @@ h2.text-center {
     font-size: 24px;
     text-align: center;
     margin-bottom: 20px;
-    font-family: 'Comic Sans MS', cursive; /* 🎨 Cute font */
-    color: #ff6f61; /* 🧡 Friendly pet tone */
 }
 
 /* ✅ Sidebar Buttons */
@@ -641,7 +639,6 @@ h2.text-center {
 /* 🐾 Title - Cute Font */
 #updatePetModal h2 {
     font-size: 22px;
-    font-family: 'Comic Sans MS', cursive;
     color: #ff6f61; /* 🐾 Pet-themed color */
     margin-bottom: 15px;
 }
@@ -736,7 +733,6 @@ h2.text-center {
 /* 🐾 Title - Cute Font */
 #addPetModal h2 {
     font-size: 22px;
-    font-family: 'Comic Sans MS', cursive;
     color: #ff6f61; /* 🐾 Pet-themed color */
     margin-bottom: 15px;
 }
