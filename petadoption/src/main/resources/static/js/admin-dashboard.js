@@ -17,6 +17,110 @@ $(document).ready(function () {
 
 
 
+
+$(document).ready(function () {
+	
+	
+    // ✅ Event Listener for Animal Distribution Button
+    $('#viewAnimalDistributionBtn').on('click', function () {
+        showAdminSection("animalDistributionSection");
+        fetchAnimalDistribution();
+    });
+});
+
+// ✅ Function to Fetch Animal Distribution Data
+function fetchAnimalDistribution() {
+    let token = localStorage.getItem('token');
+
+    $.ajax({
+        url: '/api/pets',
+        headers: { 'Authorization': 'Bearer ' + token },
+        success: function (pets) {
+            console.log("✅ Animal Distribution Data Fetched:", pets);
+            renderAnimalDistributionChart(pets);
+        },
+        error: function (xhr) {
+            console.error("❌ Error fetching animal distribution:", xhr.responseText);
+        }
+    });
+}
+
+function renderAnimalDistributionChart(pets) {
+    let animalTypeCounts = {};
+
+    pets.forEach(pet => {
+        animalTypeCounts[pet.type] = (animalTypeCounts[pet.type] || 0) + 1;
+    });
+
+    let labels = Object.keys(animalTypeCounts);
+    let dataValues = Object.values(animalTypeCounts);
+
+    let canvas = document.getElementById('animalChart');
+
+    // ✅ Fix Chart Size
+    canvas.style.width = "100%";
+    canvas.style.height = "auto";
+
+    if (window.animalChartInstance) {
+        window.animalChartInstance.destroy();
+    }
+
+    // 🎨 Define Custom Colors for Animals
+    let colorPalette = [
+        'rgba(255, 99, 132, 0.6)', // Red
+        'rgba(54, 162, 235, 0.6)', // Blue
+        'rgba(255, 206, 86, 0.6)', // Yellow
+        'rgba(75, 192, 192, 0.6)', // Green
+        'rgba(153, 102, 255, 0.6)', // Purple
+        'rgba(255, 159, 64, 0.6)'  // Orange
+    ];
+
+    let borderColorPalette = [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+    ];
+
+    // ✅ Assign a unique color to each animal type
+    let backgroundColors = labels.map((_, i) => colorPalette[i % colorPalette.length]);
+    let borderColors = labels.map((_, i) => borderColorPalette[i % borderColorPalette.length]);
+
+    let ctx = canvas.getContext('2d');
+    window.animalChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Number of Animals',
+                data: dataValues,
+                backgroundColor: backgroundColors, // ✅ Assign multiple colors
+                borderColor: borderColors, // ✅ Assign border colors
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 1,  // ✅ Force whole number increments
+                    ticks: {
+                        callback: function(value) {
+                            return Number.isInteger(value) ? value : ''; // ✅ Hide decimals
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+
 $(document).ready(function () {
 	console.log("✅ Admin Dashboard Loaded");
 	
@@ -55,6 +159,8 @@ $(document).ready(function () {
 		        $('#pendingRequestsSection').removeClass('d-none');
 		        $('#managePetsSection').addClass('d-none');
 		        $('#adoptionListSection').addClass('d-none');
+				$('#viewAnimalDistributionBtn').addClass('d-none');
+
 		        fetchPendingRequests();
 		    });
 
@@ -63,11 +169,14 @@ $(document).ready(function () {
 		        $('#managePetsSection').removeClass('d-none');
 		        $('#pendingRequestsSection').addClass('d-none');
 		        $('#adoptionListSection').addClass('d-none');
+				$('#viewAnimalDistributionBtn').addClass('d-none');
 		        fetchPets();
 		    });
 
 		    $('#viewAdoptionListBtn').off().on("click", function () {
 		        if (!token) return; // ✅ Don't fetch if no token
+				$('#viewAnimalDistributionBtn').addClass('d-none');
+
 		        showAdminSection("adoptionListSection");
 		        loadAdoptionList();
 		    });
@@ -110,17 +219,21 @@ $(document).ready(function () {
 function showAdminSection(sectionId) {
     console.log(`🔄 Switching to: ${sectionId}`);
 
-    // Hide all sections first
-    $("#pendingRequestsSection, #managePetsSection, #adoptionListSection").addClass("d-none");
+    // Hide all sections including the chart section
+    $("#pendingRequestsSection, #managePetsSection, #adoptionListSection, #animalDistributionSection").addClass("d-none");
 
     // Ensure the selected section is shown
     $("#" + sectionId).removeClass("d-none").css({
-        "display": "block",
         "transition": "opacity 0.3s ease-in-out",
         "opacity": "1"
     });
 
-    console.log(`✅ Section ${sectionId} is now visible.`);
+    // ✅ Destroy the chart instance when switching sections
+    if (sectionId !== "animalDistributionSection" && window.animalChartInstance) {
+        window.animalChartInstance.destroy();
+        window.animalChartInstance = null; // Clear the chart instance
+        console.log("🗑️ Chart destroyed");
+    }
 }
 
 

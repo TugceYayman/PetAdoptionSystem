@@ -41,6 +41,12 @@
 		<div>
 			<!-- ✅ ADMIN DASHBOARD PAGE -->
 			<div id="adminDashboardPage" class="page d-none">
+				
+				<div id="animalDistributionSection" class="d-none">
+				        <h2 class="text-center">📊 Animal Type Distribution</h2>
+				        <canvas id="animalChart"></canvas>
+				    </div>
+
 			    <div class="container-fluid admin-dashboard-container">
 			        <div class="row">
 			            <!-- ✅ Sidebar (Left) -->
@@ -56,6 +62,9 @@
 			                    <li class="nav-item">
 			                        <button class="btn btn-secondary w-100 mb-2" id="viewAdoptionListBtn">📋 Adoption List</button>
 			                    </li>
+								<li class="nav-item">
+								    <button class="btn btn-info w-100 mb-2" id="viewAnimalDistributionBtn">📊 View Animal Distribution</button>
+								</li>
 			                    <li class="nav-item">
 			                        <button class="btn btn-danger w-100 mt-3" id="logoutBtn">🚪 Logout</button>
 			                    </li>
@@ -97,7 +106,8 @@
 			                        <tbody></tbody>
 			                    </table>
 			                </div>
-
+							
+							
 			                <!-- Manage Pets Section -->
 			                <div id="managePetsSection" class="d-none">
 			                    <h2 class="text-center">🐶 Manage Pets</h2>
@@ -229,7 +239,8 @@
 	    </div>
 	</div>
 
-	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 	<script src="js/user-dashboard.js"></script>
 	<script src="js/login.js"></script>
 	<script src="js/admin-dashboard.js"></script>
