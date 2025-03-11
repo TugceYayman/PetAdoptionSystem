@@ -1,41 +1,60 @@
 $(document).ready(function () {
 	console.log("✅ Admin Dashboard Loaded");
+	
+	if (!$("#adminDashboardPage").is(":visible")) {
+	    console.warn("🚨 Admin Dashboard is hidden. Skipping admin scripts.");
+	    return;  // ✅ Prevents execution if it's hidden
+	}
+
 
 	    let token = localStorage.getItem('token');
 	    let userRole = localStorage.getItem('userRole');
 
-		// Prevent infinite loop: only redirect if not already on login page
-		if (!token || userRole !== 'ADMIN') {
-		    console.warn("🚨 Unauthorized Access. Redirecting to Login...");
+		// ✅ Prevent infinite loop by checking if already on index.html (Login Page)
+		 if (!token || userRole !== 'ADMIN') {
+		     console.warn("🚨 Unauthorized Access. Redirecting to Login...");
 
-		    if (window.location.pathname !== "/index.html") {
-		        window.location.href = "index.html";
-		    }
+		     // 🚀 FIX: Only redirect if not already on the login page
+		     if (window.location.pathname !== "/index.html") { 
+		         window.location.href = "index.html";
+		     }
+		     return;  // 🚀 Prevent further execution
+		 }
+
+
+		// ✅ Only fetch data if a valid token exists
+		if (token) {
+		    $('#managePetsSection').removeClass('d-none');
+		    fetchPets();
+		    fetchAdoptions();
 		}
 		
-		$('#managePetsSection').removeClass('d-none');
-		fetchPets();
+		//$('#managePetsSection').removeClass('d-none');
+		//fetchPets();
 
 		
-		$("#viewAdoptionListBtn").off().on("click", function () {
+		$('#viewPendingRequestsBtn').on('click', function () {
+		        if (!token) return; // ✅ Don't fetch if no token
+		        $('#pendingRequestsSection').removeClass('d-none');
+		        $('#managePetsSection').addClass('d-none');
+		        $('#adoptionListSection').addClass('d-none');
+		        fetchPendingRequests();
+		    });
+
+		    $('#managePetsBtn').on('click', function () {
+		        if (!token) return; // ✅ Don't fetch if no token
+		        $('#managePetsSection').removeClass('d-none');
+		        $('#pendingRequestsSection').addClass('d-none');
+		        $('#adoptionListSection').addClass('d-none');
+		        fetchPets();
+		    });
+
+		    $('#viewAdoptionListBtn').off().on("click", function () {
+		        if (!token) return; // ✅ Don't fetch if no token
 		        showAdminSection("adoptionListSection");
 		        loadAdoptionList();
 		    });
 
-	    // ✅ Sidebar Navigation
-	    $('#viewPendingRequestsBtn').on('click', function () {
-	        $('#pendingRequestsSection').removeClass('d-none');
-	        $('#managePetsSection').addClass('d-none');
-			$('#adoptionListSection').addClass('d-none');
-	        fetchPendingRequests();
-	    });
-
-	    $('#managePetsBtn').on('click', function () {
-	        $('#managePetsSection').removeClass('d-none');
-	        $('#pendingRequestsSection').addClass('d-none');
-			$('#adoptionListSection').addClass('d-none');
-	        fetchPets();
-	    });
 		
 		
 		$('#logoutBtn').on('click', function () {
@@ -285,7 +304,7 @@ window.fetchPets = function () {
     let token = localStorage.getItem('token');  
 
     if (!token) {
-        showErrorPopup("Authentication token missing. Please log in again.");
+		console.warn("🚨 Authentication token missing. Not fetching adoptions.");
         return;
     }
 
@@ -311,7 +330,11 @@ window.fetchPets = function () {
 // ✅ Fetch Adoptions
 window.fetchAdoptions = function () {
     console.log("📡 Fetching Adoptions...");
-    let token = localStorage.getItem('token');  
+    let token = localStorage.getItem('token'); 
+	if (!token) {
+	       console.warn("🚨 Authentication token missing. Not fetching adoptions.");
+	       return;
+	   } 
     $.ajax({
         url: '/api/admin/adoptions',
         headers: { 'Authorization': 'Bearer ' + token },

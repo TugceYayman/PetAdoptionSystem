@@ -1,6 +1,7 @@
 // ✅ Declare Function at Global Scope
 window.showSection = function (sectionId) {
     console.log(`🔄 Showing ${sectionId}`);
+	
 
     $("#petsContainer, #myPetsContainer, #pendingRequestsContainer").addClass("d-none");
 
@@ -115,7 +116,6 @@ $(document).ready(function () {
 
     if (!token) {
         console.warn("🚨 No token found. Redirecting to login...");
-        window.location.href = "index.html";
         return;
     }
 
@@ -127,16 +127,19 @@ $(document).ready(function () {
 
     // ✅ Sidebar Navigation Click Events
     $('#viewPetsBtn').off().on('click', function () {
+		if (!token) return;
         showSection("petsContainer");
         loadAvailablePets();
     });
 
     $('#myPetsBtn').off().on('click', function () {
+		if (!token) return;
         showSection("myPetsContainer");
         loadMyPets();
     });
 
     $('#pendingRequestsBtn').off().on('click', function () {
+		if (!token) return;
         showSection("pendingRequestsContainer");
         loadPendingRequests();
     });
