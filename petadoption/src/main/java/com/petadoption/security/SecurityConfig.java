@@ -69,7 +69,9 @@ public class SecurityConfig {
 
                 // Ensure only ADMIN can modify pets
                 .requestMatchers(HttpMethod.PUT, "/api/pets/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasAuthority("ADMIN")
+                 .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasAuthority("ADMIN")
+               // .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasRole("ADMIN")
+
 
                 // ✅ Allow users to access pending requests
                 .requestMatchers("/api/adoptions/my-pets", "/api/adoptions/my-requests", "/api/adoptions/pending-requests").hasAuthority("USER") // ✅ Ensure correct permissions

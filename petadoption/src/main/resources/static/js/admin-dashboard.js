@@ -1,4 +1,23 @@
 $(document).ready(function () {
+    $(document).on('click', '#addPetButton', function () {
+        console.log("✅ Add Pet Button Clicked!");
+        $('#addPetModal').removeClass('d-none').show();
+    });
+	
+	$(document).on('click', '#closeAddPetModal', function () {
+	       $('#addPetModal').hide();
+	   });
+	   
+	   // ✅ Add Pet with Image Upload
+	   $(document).on('click', '#confirmAddPet', function () {
+	       addPet();
+	   });
+
+});
+
+
+
+$(document).ready(function () {
 	console.log("✅ Admin Dashboard Loaded");
 	
 	if (!$("#adminDashboardPage").is(":visible")) {
@@ -29,8 +48,6 @@ $(document).ready(function () {
 		    fetchAdoptions();
 		}
 		
-		//$('#managePetsSection').removeClass('d-none');
-		//fetchPets();
 
 		
 		$('#viewPendingRequestsBtn').on('click', function () {
@@ -80,10 +97,6 @@ $(document).ready(function () {
         $('#updatePetModal').hide();
     });
 
-    // ✅ Add Pet with Image Upload
-    $(document).on('click', '#confirmAddPet', function () {
-        addPet();
-    });
 
     // ✅ Update Pet with Image Upload
     $(document).on('click', '#confirmUpdatePet', function () {
@@ -422,9 +435,19 @@ function confirmRemovePet(petId) {
     }
 }
 
-// ✅ Remove Pet
 window.removePet = function (petId) {
     let token = localStorage.getItem('token');
+    
+    if (!token) {
+        console.error("🚨 No authentication token found. Redirecting to login...");
+        alert("Session expired. Please log in again.");
+        window.location.href = "/index.html";
+        return;
+    }
+
+	console.log("📝 Sending DELETE request to:", `/api/pets/${petId}`);
+	console.log("🔑 Authorization Header:", `Bearer ${token}`);
+	
     $.ajax({
         url: `/api/pets/${petId}`,
         type: 'DELETE',
@@ -434,8 +457,8 @@ window.removePet = function (petId) {
             fetchPets();
         },
         error: function (xhr) {
-            console.error("❌ Error removing pet:", xhr.responseText);
-            showErrorPopup("Failed to remove pet.");
+            console.error(`❌ Error removing pet: ${xhr.status} - ${xhr.responseText}`);
+            showErrorPopup(`Failed to remove pet. Status: ${xhr.status}`);
         }
     });
 };

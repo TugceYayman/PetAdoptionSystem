@@ -696,60 +696,6 @@ h2.text-center {
 }
 
 
-/* ✅ Center & Style the Modal */
-#addPetModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    z-index: 9999; /* Ensure it appears on top */
-}
-
-/* ✅ Add Overlay for Background Blur */
-#addPetModal::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 9998;
-}
-
-/* ✅ Style Modal Content */
-#addPetModal .modal-content {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-/* ✅ Improve Form Elements */
-#addPetModal input, 
-#addPetModal select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* ✅ Buttons */
-#addPetModal button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-}
 
 #confirmAddPet {
     background: #ffb74d;
@@ -759,6 +705,89 @@ h2.text-center {
 #closeAddPetModal {
     background: #87cefa;
     color: white;
+}
+
+/* ✅ Center & Style the Modal */
+#addPetModal {
+    background: rgba(0, 0, 0, 0.4); /* ✅ Dark overlay for focus */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 🐾 Modal Content - Cute & Neat */
+#addPetModal .modal-content {
+    background: #fffaf0; /* 🟠 Soft beige tone */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    width: 400px; /* ✅ Better width */
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+/* 🐾 Title - Cute Font */
+#addPetModal h2 {
+    font-size: 22px;
+    font-family: 'Comic Sans MS', cursive;
+    color: #ff6f61; /* 🐾 Pet-themed color */
+    margin-bottom: 15px;
+}
+
+/* ✅ Input Fields */
+#addPetModal input, #addPetModal select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ffcc80; /* 🟠 Soft border */
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* ✅ Upload Input */
+#addPetModal input[type="file"] {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+/* 🎨 Button Styling */
+#addPetModal button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* ✅ Save Button - Warm & Cute */
+#addPetModal .btn-primary {
+    background-color: #ffb74d;
+    color: white;
+}
+
+/* ✅ Cancel Button - Soft Blue */
+#addPetModal .btn-secondary {
+    background-color: #87cefa;
+    color: white;
+    margin-top: 8px;
+}
+
+/* 🐾 Hover Effects */
+#addPetModal button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 
