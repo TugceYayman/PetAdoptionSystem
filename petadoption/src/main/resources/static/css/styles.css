@@ -19,7 +19,6 @@
 }
 
 #loginPage h2, #registerPage h2 {
-    font-family: 'Comic Sans MS', cursive;
     color: #ff6f61;
     font-size: 26px;
     margin-bottom: 15px;
@@ -82,8 +81,9 @@
 
 /* ✅ Sidebar Title */
 .sidebar h4 {
-    text-align: center;
-    margin-bottom: 20px;
+	font-size: 24px;
+	text-align: center;
+	margin-bottom: 20px;
 }
 
 /* ✅ Main Content */
@@ -235,6 +235,7 @@ overflow-x: hidden;
     display: flex;
     height: 100vh; /* Full height */
     overflow: hidden;
+	margin: 30px;
 }
 
 /* ✅ Sidebar Full Height */
@@ -388,39 +389,427 @@ h2.text-center {
     text-align: center;
     display: none; /* Hide initially */
 }
-/* Rabbit Floating & Jumping */
 .floating-rabbit {
-	max-width: 150px; /* ✅ Adjust this based on your image */
-
+    max-width: 120px; /* Adjust size */
     position: absolute;
-	width: auto;
-    height: auto;
-    bottom: 50px;
-    left: -100px; /* Start off-screen on the left */
-    transform: translateX(0%);
-    animation: jump 1.5s infinite ease-in-out, moveAcross 5s infinite linear;
+    top: 50px; /* Initial position (adjust this if needed) */
+    left: -100px; /* Start off-screen */
+    animation: jump 1.5s infinite ease-in-out, moveAcross 6s infinite linear; /* Jumping + Moving */
 }
 
 /* 🐰 Jumping Animation */
 @keyframes jump {
     0%, 100% {
-        bottom: 50px;
+        transform: translateY(0);
     }
     50% {
-        bottom: 200px; /* Adjust height of the jump */
+        transform: translateY(-50px); /* Moves up and down */
     }
 }
 
 /* ➡️ Move Right & Reappear from Left */
 @keyframes moveAcross {
     0% {
-        left: -100px; /* ✅ Start slightly outside the left edge */
+        left: -120px; /* ✅ Start slightly outside the left edge */
     }
     100% {
-        left: calc(100vw + 50px); /* ✅ Stops at the edge without overflow */
+        left: calc(100vw + 50px); /* ✅ Stops at the right edge */
     }
 }
 
+/* ============================ */
+/* ✅ Cute Admin Sidebar */
+/* ============================ */
+.admin-sidebar {
+    background: linear-gradient(135deg, #fff8f2, #ffedd3); /* 🟠 Soft animal-inspired gradient */
+    padding: 20px;
+    width: 250px; /* ✅ Optimized width */
+    height: calc(100vh - 20px);
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 🐾 Sidebar Title - Cute & Fun */
+.admin-sidebar h4 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ✅ Sidebar Buttons */
+.admin-sidebar .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* 🐶 Icons Inside Buttons */
+.admin-sidebar .btn::before {
+    margin-right: 8px;
+}
+
+/* 🎨 Button Colors */
+.btn-primary { background: #ffb74d; color: white; font-size: 22px;  } /* 🟠 Pending Requests */
+.btn-success { background: #77dd77; color: white; font-size: 22px;} /* 🟢 Manage Pets */
+.btn-secondary { background: #87cefa; color: white; font-size: 22px;} /* 🔵 Adoption List */
+.btn-danger { background: #ff6f61; color: white; font-size: 22px; } /* 🔴 Logout */
+
+/* 🐾 Cute Hover Effect */
+.admin-sidebar .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ Sidebar List Fix */
+.nav {
+    width: 100%;
+    padding: 0;
+}
+
+/* ✅ Logout Button */
+#logoutBtn {
+    margin-top: auto; /* Pushes logout to bottom */
+}
+/* ✅ User Sidebar with Cute Animal Theme */
+.sidebar {
+    background: linear-gradient(135deg, #fff8f2, #ffedd3); /* 🟠 Soft warm tones */
+    padding: 20px;
+    width: 250px; /* ✅ Optimized width */
+    height: calc(100vh - 20px);
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px; /* 🐾 Soft rounded edges */
+}
+
+/* 🐾 Sidebar Title - Fun & Friendly */
+.sidebar h4 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Comic Sans MS', cursive; /* 🎨 Cute font */
+    color: #ff6f61; /* 🧡 Friendly pet tone */
+}
+
+/* ✅ Sidebar Buttons */
+.sidebar .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🐶 Icons Inside Buttons */
+.sidebar .btn::before {
+    margin-right: 8px;
+}
+
+/* 🎨 Button Colors */
+.btn-primary { background: #ffb74d; color: white; font-size: 20px; } /* 🟠 View Pets */
+.btn-warning { background: #ffcc5c; color: white; font-size: 20px; } /* 🟡 My Pets */
+.btn-info { background: #87cefa; color: white; font-size: 20px; } /* 🔵 Pending Requests */
+.btn-danger { background: #ff6f61; color: white; font-size: 20px; } /* 🔴 Logout */
+
+/* 🐾 Cute Hover Effect */
+.sidebar .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+/* ============================ */
+/* ✅ Responsive Fixes */
+/* ============================ */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 20px;
+    }
+}
+
+/* ============================ */
+/* ✅ Fix Pending Requests & Adoption List Layout */
+/* ============================ */
+#pendingRequestsSection, #adoptionListSection {
+    width: 100%; /* ✅ Increase width */
+    max-width: 1100px; /* ✅ Ensure it doesn’t stretch too much */
+    margin: 20px auto; /* ✅ Center it beautifully */
+    padding: 20px;
+    border-radius: 15px;
+    overflow-x: auto;
+}
+
+
+
+/* ✅ Table Styling */
+#pendingRequestsTable, #adoptionListTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ✅ Table Headers */
+#pendingRequestsTable th, #adoptionListTable th {
+    background: #ffb74d; /* Soft orange header */
+    color: white;
+    font-size: 18px; /* ✅ Bigger text */
+    padding: 12px;
+}
+
+/* ✅ Table Rows */
+#pendingRequestsTable td, #adoptionListTable td {
+    font-size: 16px;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ✅ Last Row Fix (Removes border) */
+#pendingRequestsTable tr:last-child td, 
+#adoptionListTable tr:last-child td {
+    border-bottom: none;
+}
+
+/* ✅ Make Buttons Bigger */
+.approve-request, .reject-request {
+    font-size: 16px;
+    padding: 8px 12px;
+    margin: 5px;
+    border-radius: 8px;
+}
+
+/* 🐾 Make Status Tags Cute */
+.badge {
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+
+
+/* ✅ Center & Style the Modal */
+#updatePetModal {
+    background: rgba(0, 0, 0, 0.4); /* ✅ Dark overlay for focus */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 🐾 Modal Content - Cute & Neat */
+#updatePetModal .modal-content {
+    background: #fffaf0; /* 🟠 Soft beige tone */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    width: 400px; /* ✅ Better width */
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+/* 🐾 Title - Cute Font */
+#updatePetModal h2 {
+    font-size: 22px;
+    font-family: 'Comic Sans MS', cursive;
+    color: #ff6f61; /* 🐾 Pet-themed color */
+    margin-bottom: 15px;
+}
+
+/* ✅ Input Fields */
+#updatePetModal input, #updatePetModal select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ffcc80; /* 🟠 Soft border */
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* ✅ Upload Input */
+#updatePetModal input[type="file"] {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+/* 🎨 Button Styling */
+#updatePetModal button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* ✅ Save Button - Warm & Cute */
+#updatePetModal .btn-primary {
+    background-color: #ffb74d;
+    color: white;
+}
+
+/* ✅ Cancel Button - Soft Blue */
+#updatePetModal .btn-secondary {
+    background-color: #87cefa;
+    color: white;
+    margin-top: 8px;
+}
+
+/* 🐾 Hover Effects */
+#updatePetModal button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ✅ Center & Style the Modal */
+#addPetModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 9999; /* Ensure it appears on top */
+}
+
+/* ✅ Add Overlay for Background Blur */
+#addPetModal::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 9998;
+}
+
+/* ✅ Style Modal Content */
+#addPetModal .modal-content {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* ✅ Improve Form Elements */
+#addPetModal input, 
+#addPetModal select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ✅ Buttons */
+#addPetModal button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#confirmAddPet {
+    background: #ffb74d;
+    color: white;
+}
+
+#closeAddPetModal {
+    background: #87cefa;
+    color: white;
+}
+
+
+/* ✅ Responsive Fixes */
+@media (max-width: 600px) {
+    #updatePetModal .modal-content {
+        width: 90%;
+        padding: 15px;
+    }
+}
+
+
+
+
+/* ✅ Responsive Fix */
+@media (max-width: 768px) {
+    #pendingRequestsTable td {
+        flex-direction: column; /* ✅ Stack buttons on smaller screens */
+    }
+    
+    .approve-request, .reject-request {
+        width: 100%; /* ✅ Full width buttons */
+    }
+}
+
+
+
+/* ============================ */
+/* ✅ Responsive Fixes */
+/* ============================ */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding-bottom: 20px;
+    }
+    .admin-main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+    .pet-card {
+        width: 48%;
+    }
+}
+
+@media (max-width: 768px) {
+    .pet-card {
+        width: 100%;
+    }
+}
 
 /* ============================ */
 /* ✅ Responsive Fixes */
