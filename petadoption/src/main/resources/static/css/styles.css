@@ -218,6 +218,47 @@ html, body {
     border-radius: 5px;
 }
 
+/* ✅ Ensure the admin page takes full height */
+.admin-dashboard-container {
+    display: flex;
+    height: 100vh; /* Full height */
+    overflow: hidden;
+}
+
+/* ✅ Sidebar Full Height */
+.admin-sidebar {
+    width: 250px;
+    background: #f8f9fa;
+    padding: 20px;
+    height: 100vh; /* Ensure full height */
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.admin-main-content {
+    margin-left: 270px; /* Adjust for sidebar */
+    padding: 20px;
+    width: calc(100% - 270px);
+    min-height: 100vh; /* ✅ Ensure content expands */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* ✅ Allow scrolling */
+}
+
+
+
+#managePetsSection, #pendingRequestsSection, #adoptionListSection {
+    flex-grow: 1; /* ✅ Expands the section */
+    overflow-y: auto; /* ✅ Enables scrolling */
+    max-height: calc(100vh - 120px); /* ✅ Prevents cutting off */
+    padding-bottom: 20px; /* ✅ Prevents content getting cut */
+}
+
+
 
 /* ============================ */
 /* ✅ Fix Pet List Layout (3 Cards Per Row) */

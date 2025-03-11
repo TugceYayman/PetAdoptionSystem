@@ -39,76 +39,76 @@
         </div>
 
 		<div>
-		        <!-- ========== ADMIN DASHBOARD ========== -->
-		        <div id="adminDashboardPage" class="page d-none">
-		            <div class="row">
-		                <!-- Admin Sidebar -->
-		                <div class="col-md-3 bg-light p-3">
-		                    <h4 class="text-center">🐾 Admin Menu</h4>
-		                    <ul class="nav flex-column">
-		                        <li class="nav-item">
-		                            <button class="btn btn-primary w-100 mb-2" id="viewPendingRequestsBtn">⏳ View Pending Requests</button>
-		                        </li>
-		                        <li class="nav-item">
-		                            <button class="btn btn-success w-100 mb-2" id="managePetsBtn">🐶 Manage Pets</button>
-		                        </li>
-								<li class="nav-item">
-								    <button class="btn btn-secondary w-100 mb-2" id="viewAdoptionListBtn">📋 Adoption List</button>
-								</li>
+			<!-- ✅ ADMIN DASHBOARD PAGE -->
+			<div id="adminDashboardPage" class="page d-none">
+			    <div class="container-fluid admin-dashboard-container">
+			        <div class="row">
+			            <!-- ✅ Sidebar (Left) -->
+			            <div class="col-md-3 admin-sidebar">
+			                <h4 class="text-center mt-3">🐾 Admin Menu</h4>
+			                <ul class="nav flex-column">
+			                    <li class="nav-item">
+			                        <button class="btn btn-primary w-100 mb-2" id="viewPendingRequestsBtn">⏳ View Pending Requests</button>
+			                    </li>
+			                    <li class="nav-item">
+			                        <button class="btn btn-success w-100 mb-2" id="managePetsBtn">🐶 Manage Pets</button>
+			                    </li>
+			                    <li class="nav-item">
+			                        <button class="btn btn-secondary w-100 mb-2" id="viewAdoptionListBtn">📋 Adoption List</button>
+			                    </li>
+			                    <li class="nav-item">
+			                        <button class="btn btn-danger w-100 mt-3" id="logoutBtn">🚪 Logout</button>
+			                    </li>
+			                </ul>
+			            </div>
 
-		                        <li class="nav-item">
-		                            <button class="btn btn-danger w-100 mt-3" id="logoutBtn">🚪 Logout</button>
-		                        </li>
-		                    </ul>
-		                </div>
+			            <!-- ✅ Main Content (Right) -->
+			            <div class="col-md-9 admin-main-content">
+			                <!-- Pending Requests Section -->
+			                <div id="pendingRequestsSection" class="d-none">
+			                    <h2 class="text-center">⏳ Pending Adoption Requests</h2>
+			                    <table id="pendingRequestsTable" class="table table-striped">
+			                        <thead>
+			                            <tr>
+			                                <th>Pet</th>
+			                                <th>Requested By</th>
+			                                <th>Status</th>
+			                                <th>Actions</th>
+			                            </tr>
+			                        </thead>
+			                        <tbody></tbody>
+			                    </table>
+			                </div>
 
-		                <!-- Main Content -->
-		                <div class="col-md-9">
-		                    <!-- Pending Requests Section -->
-		                    <div id="pendingRequestsSection" class="d-none">
-		                        <h2 class="text-center">Pending Adoption Requests</h2>
-		                        <table id="pendingRequestsTable" class="table table-striped">
-		                            <thead>
-		                                <tr>
-		                                    <th>Pet</th>
-		                                    <th>Requested By</th>
-		                                    <th>Status</th>
-		                                    <th>Actions</th>
-		                                </tr>
-		                            </thead>
-		                            <tbody></tbody>
-		                        </table>
-		                    </div>
-							
-							<!-- ✅ Adoption List Section -->
-							<div id="adoptionListSection" class="d-none">
-							    <h2 class="text-center">📋 Adoption List</h2>
-							    <table id="adoptionListTable" class="table table-striped">
-							        <thead>
-							            <tr>
-							                <th>Adopter Name</th>
-							                <th>Email</th>
-							                <th>Pet Name</th>
-							                <th>Type</th>
-							                <th>Breed</th>
-							                <th>Status</th>
-							            </tr>
-							        </thead>
-							        <tbody></tbody>
-							    </table>
-							</div>
+			                <!-- Adoption List Section -->
+			                <div id="adoptionListSection" class="d-none">
+			                    <h2 class="text-center">📋 Adoption List</h2>
+			                    <table id="adoptionListTable" class="table table-striped">
+			                        <thead>
+			                            <tr>
+			                                <th>Adopter Name</th>
+			                                <th>Email</th>
+			                                <th>Pet Name</th>
+			                                <th>Type</th>
+			                                <th>Breed</th>
+			                                <th>Status</th>
+			                            </tr>
+			                        </thead>
+			                        <tbody></tbody>
+			                    </table>
+			                </div>
 
+			                <!-- Manage Pets Section -->
+			                <div id="managePetsSection" class="d-none">
+			                    <h2 class="text-center">🐶 Manage Pets</h2>
+			                    <button id="addPetButton" class="btn btn-success mb-3">➕ Add New Pet</button>
+			                    <div id="petsCardContainer" class="d-flex flex-wrap gap-3 justify-content-center"></div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
 
-		                    <!-- Manage Pets Section -->
-		                    <div id="managePetsSection" class="d-none">
-		                        <h2 class="text-center">Manage Pets</h2>
-		                        <button id="addPetButton" class="btn btn-success mb-3">➕ Add New Pet</button>
-		                        <div id="petsCardContainer" class="d-flex flex-wrap gap-3 justify-content-center"></div>
-		                    </div>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
 
         <!-- ========== Add Pet Modal ========== -->
         <div id="addPetModal" class="modal d-none">
