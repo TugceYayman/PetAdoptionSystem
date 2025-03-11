@@ -13,6 +13,10 @@ $(document).ready(function () {
 		    }
 		}
 		
+		showAdminSection("managePetsSection");
+		fetchPets();
+
+		
 		$("#viewAdoptionListBtn").off().on("click", function () {
 		        showAdminSection("adoptionListSection");
 		        loadAdoptionList();

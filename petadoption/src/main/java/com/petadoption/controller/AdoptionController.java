@@ -43,20 +43,23 @@ public class AdoptionController {
         User user = userOptional.get();
         Pet pet = petOptional.get();
 
-        if (pet.getStatus() != PetStatus.AVAILABLE) { // ✅ Use Enum instead of String
+        if (pet.getStatus() != PetStatus.AVAILABLE) { // ✅ Only allow requests for available pets
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pet is already adopted.");
         }
 
-        // ✅ Prevent duplicate requests
-        if (adoptionRepository.existsByUserAndPet(user, pet)) {
+        // ✅ Prevent duplicate requests only if the previous one was not rejected or unadopted
+        List<AdoptionStatus> blockedStatuses = List.of(AdoptionStatus.PENDING, AdoptionStatus.APPROVED);
+        if (adoptionRepository.existsByUserAndPetAndStatusIn(user, pet, blockedStatuses)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have already requested adoption for this pet.");
         }
 
+        // ✅ Create a new adoption request
         Adoption adoptionRequest = new Adoption(user, pet, AdoptionStatus.PENDING);
         adoptionRepository.save(adoptionRequest);
 
         return ResponseEntity.ok("Adoption request sent successfully.");
     }
+
     
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/my-pets")

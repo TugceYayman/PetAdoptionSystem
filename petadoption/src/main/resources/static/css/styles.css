@@ -174,11 +174,58 @@ html, body {
 	display: block !important; /* ✅ Ensure visibility */
 }
 
+/* ✅ Ensure Requests are Full-Width and Displayed Horizontally */
+#pendingRequestsList {
+    display: flex;
+    flex-direction: column; /* ✅ One request per row */
+    gap: 15px;
+    padding: 20px;
+    align-items: center; /* ✅ Center horizontally */
+}
+
+/* ✅ Pending Requests Styling */
+#pendingRequestsList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adds spacing between rows */
+    width: 100%;
+    align-items: center;
+}
+
+.pending-request-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Adjusts width to fit page */
+    background-color: white;
+    border: 2px solid black; /* Add a border like your sketch */
+    border-radius: 5px;
+    padding: 15px 20px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pending-request-card h5 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.pending-request-card .status {
+    font-weight: bold;
+    color: black;
+    background-color: yellow;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
 /* ============================ */
 /* ✅ Fix Pet List Layout (3 Cards Per Row) */
 /* ============================ */
 #availablePetsList, #myPetsList, #pendingRequestsList {
     display: block; /* ✅ Default state */
+	margin-top: 20px; /* Adjust as needed */
+
 }
 
 #availablePetsList.show, #myPetsList.show, #pendingRequestsList.show {
@@ -188,16 +235,80 @@ html, body {
 
 #pendingRequestsList {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
+    flex-direction: column;
+    gap: 15px; /* Space between rows */
+    width: 100%;
+    align-items: center; /* Center cards */
 }
 
-#pendingRequestCard {
-    max-width: 250px;
-    min-width: 220px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+.pending-request-card {
+    width: 80%; /* Adjust width to make it more full */
+    max-width: 600px; /* Ensures it's not too wide */
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ✅ Adjust My Pets Cards */
+.user-pet-card {
+    width: 300px; /* Reduce width */
+    max-width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.user-pet-card:hover {
+    transform: translateY(-3px);
+}
+
+.user-pet-card img {
+    width: 100%;
+    height: 200px; /* Smaller height */
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+/* ✅ Align Cards in a Grid */
+#myPetsList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the cards */
+    gap: 15px;
+}
+
+/* ✅ Adjust Un-Adopt Button */
+.user-pet-card button {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    background-color: #ff6f61;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.user-pet-card button:hover {
+    background-color: #ff3b30;
+}
+
+/* Add spacing between headers and lists */
+h2.text-center {
+    margin-bottom: 30px; /* Adjust as needed */
 }
 
 

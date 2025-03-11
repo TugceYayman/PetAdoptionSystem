@@ -47,18 +47,16 @@ window.renderMyPets = function (pets) {
 
     pets.forEach(pet => {
         const petCard = `
-            <div class="col-md-4 d-flex align-items-stretch">
-                <div class="card user-pet-card shadow-sm p-3 rounded w-100">
-                    <img src="${pet.imageUrl || 'default-image.jpg'}" class="card-img-top rounded" alt="${pet.name}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <h5 class="card-title text-danger">${pet.name}</h5>
-                        <p><strong>Type:</strong> ${pet.type}</p>
-                        <p><strong>Breed:</strong> ${pet.breed}</p>
-                        <p><strong>Age:</strong> ${pet.age} years</p>
-                        <button class="btn btn-danger unadopt-pet w-100" data-id="${pet.id}">
-                            ❌ Un-Adopt
-                        </button>
-                    </div>
+            <div class="user-pet-card">
+                <img src="${pet.imageUrl || 'default-image.jpg'}" alt="${pet.name}">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">${pet.name}</h5>
+                    <p><strong>Type:</strong> ${pet.type}</p>
+                    <p><strong>Breed:</strong> ${pet.breed || 'Unknown'}</p>
+                    <p><strong>Age:</strong> ${pet.age} years</p>
+                    <button class="btn btn-danger unadopt-pet" data-id="${pet.id}">
+                        ❌ Un-Adopt
+                    </button>
                 </div>
             </div>
         `;
@@ -73,6 +71,7 @@ window.renderMyPets = function (pets) {
 
     container.addClass("show");
 };
+
 
 // ✅ Unadopt Pet with Confirmation Dialog
 window.unadoptPet = function (petId) {
@@ -275,7 +274,6 @@ function loadPendingRequests() {
     });
 }
 
-// ✅ Render Pending Adoption Requests
 function renderPendingRequests(requests) {
     const container = $("#pendingRequestsList");
     container.empty();
@@ -285,17 +283,22 @@ function renderPendingRequests(requests) {
         return;
     }
 
-    let requestCards = requests.map(request => `
-        <div class="col-md-4">
-            <div class="card shadow-sm p-3 rounded text-center">
-                <h5 class="card-title">${request.pet.name}</h5>
-                <p><strong>Status:</strong> <span class="badge bg-warning">${request.status}</span></p>
+    requests.forEach(request => {
+        const requestCard = `
+            <div class="pending-request-card">
+                <div>
+                    <h5>${request.pet.name}</h5>
+                    <p><strong>Type:</strong> ${request.pet.type} | <strong>Breed:</strong> ${request.pet.breed}</p>
+                </div>
+                <div class="status">${request.status}</div>
             </div>
-        </div>
-    `).join("");
-
-    container.html(requestCards);
+        `;
+        container.append(requestCard);
+    });
 }
+
+
+
 
 // ✅ Popups
 function displayErrorPopup(message) {

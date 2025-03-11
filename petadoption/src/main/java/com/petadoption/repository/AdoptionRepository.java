@@ -28,10 +28,16 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     // ✅ Get all pending adoption requests for a specific user
     List<Adoption> findByUserAndStatus(User user, AdoptionStatus status);
     
+    boolean existsByUserAndPetAndStatusIn(User user, Pet pet, List<AdoptionStatus> statuses);
+
+    
     Optional<Adoption> findByUserAndPetAndStatus(User user, Pet pet, AdoptionStatus status);
     
-    @Query("SELECT a FROM Adoption a JOIN FETCH a.user u JOIN FETCH a.pet p")
-    List<Adoption> findAllAdoptionsWithDetails();
+    @Query("SELECT a FROM Adoption a WHERE a.id IN " +
+    	       "(SELECT MAX(a2.id) FROM Adoption a2 GROUP BY a2.pet)")
+    	List<Adoption> findLatestAdoptionRecords();
+
+
 
 
 

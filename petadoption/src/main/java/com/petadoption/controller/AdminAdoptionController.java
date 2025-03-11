@@ -91,7 +91,7 @@ public class AdminAdoptionController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/adoption-list")
     public ResponseEntity<List<Map<String, Object>>> getAllAdoptions() {
-        List<Adoption> adoptions = adoptionRepository.findAllAdoptionsWithDetails();
+        List<Adoption> adoptions = adoptionRepository.findLatestAdoptionRecords();
         List<Map<String, Object>> adoptionList = new ArrayList<>();
 
         for (Adoption adoption : adoptions) {
@@ -100,7 +100,7 @@ public class AdminAdoptionController {
             adoptionData.put("adopterEmail", adoption.getUser().getEmail());
             adoptionData.put("petName", adoption.getPet().getName());
             adoptionData.put("petType", adoption.getPet().getType());
-            adoptionData.put("petBreed", adoption.getPet().getBreed());
+            adoptionData.put("petBreed", adoption.getPet().getBreed() != null ? adoption.getPet().getBreed() : "Unknown");
             adoptionData.put("adoptionStatus", adoption.getStatus().toString());
 
             adoptionList.add(adoptionData);
