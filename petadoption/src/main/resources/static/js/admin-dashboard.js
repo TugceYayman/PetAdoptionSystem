@@ -149,7 +149,7 @@ $(document).ready(function () {
 		if (token) {
 		    $('#managePetsSection').removeClass('d-none');
 		    fetchPets();
-		    fetchAdoptions();
+		  //  fetchAdoptions();
 		}
 		
 
@@ -181,17 +181,7 @@ $(document).ready(function () {
 		        loadAdoptionList();
 		    });
 
-		
-		
-		$('#logoutBtn').on('click', function () {
-		    $('#logoutModal').modal('show');
-		});
-
-		// ✅ Confirm Logout for Admin
-		$('#confirmLogout').on('click', function () {
-		    logoutAdmin();
-		});
-
+	
 
     // ✅ Event Listeners for Modals
     $(document).on('click', '#addPetButton', function () {
@@ -213,7 +203,7 @@ $(document).ready(function () {
     });
 
     fetchPets();
-    fetchAdoptions();
+  //  fetchAdoptions();
 });
 
 function showAdminSection(sectionId) {
@@ -454,7 +444,7 @@ window.fetchPets = function () {
 };
 
 // ✅ Fetch Adoptions
-window.fetchAdoptions = function () {
+/*window.fetchAdoptions = function () {
     console.log("📡 Fetching Adoptions...");
     let token = localStorage.getItem('token'); 
 	if (!token) {
@@ -477,7 +467,7 @@ window.fetchAdoptions = function () {
             showErrorPopup("Failed to load adoptions.");
         }
     });
-};
+};*/
 
 // ✅ Render Pets with 3-Column Layout
 window.renderPetsForAdmin = function (pets) {
@@ -690,14 +680,6 @@ function handleAdoptionRequest(requestId, action) {
     });
 }
 
-function logoutAdmin() {
-    console.log("🚪 Logging out admin...");
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole');
 
-    setTimeout(() => {
-        window.location.href = "index.html"; // Ensures logout is processed properly
-    }, 500);
-}
 
 

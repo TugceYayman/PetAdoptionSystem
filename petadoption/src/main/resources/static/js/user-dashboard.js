@@ -144,13 +144,7 @@ $(document).ready(function () {
         loadPendingRequests();
     });
 
-    $('#logoutBtn').on('click', function () {
-        $('#logoutModal').modal('show');
-    });
 
-    $('#confirmLogout').on('click', function () {
-        logoutUser();
-    });
 });
 
 // ✅ Load Available Pets

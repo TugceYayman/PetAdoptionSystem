@@ -70,6 +70,9 @@ $(document).ready(function () {
                 localStorage.setItem('userRole', response.role);
 
                 showSuccessPopup("✅ Login successful!");
+				
+				$('#loginEmail').val('').attr('placeholder', 'Enter your email');
+				$('#loginPassword').val('').attr('placeholder', 'Enter your password');
 
                 setTimeout(() => {
                     if (response.role === 'ADMIN') {
@@ -93,19 +96,32 @@ $(document).ready(function () {
         });
     });
 
-    // ✅ Logout function
-    function logoutUser() {
-        console.log("🚪 Logging out...");
-        localStorage.removeItem('token');
-        localStorage.removeItem('userRole');
+	// ✅ Function to Logout User and Show Success Message
+	function logoutUser() {
+	    console.log("🚪 Logging out user...");
 
-        $(".dashboard-container").addClass("d-none"); // ✅ Hide sidebar after logout
-        switchToPage('loginPage');
-    }
+	    // ✅ Close the logout modal before logging out
+	    $("#logoutModal").modal("hide");
 
-    $(document).on('click', '#logoutBtn', function () {
-        logoutUser();
-    });
+	    // ✅ Remove stored authentication data
+	    localStorage.removeItem("token");
+	    localStorage.removeItem("userRole");
+
+	    // ✅ Hide all sections before redirecting
+	    $(".dashboard-container").addClass("d-none");
+	    $("#pendingRequestsSection, #adoptionListSection, #animalDistributionSection, #managePetsSection, #userDashboardPage, #adminDashboardPage").addClass("d-none");
+
+	    // ✅ Redirect to login page with a success message
+	    setTimeout(() => {
+	        switchToPage("loginPage");
+
+	        // ✅ Show a success message after redirecting
+	        showSuccessPopup("✅ You have been logged out successfully!");
+	        console.log("🔄 Redirected to login page with success message.");
+	    }, 300);
+	}
+
+
 
     // ✅ Function to switch between pages
     function switchToPage(pageId) {
@@ -184,6 +200,22 @@ $(document).ready(function () {
             showSection("pendingRequestsContainer");
             loadPendingRequests();
         });
+		
+		$(document).on("click", "#logoutBtn", function () {
+		    console.log("🚪 Logout button clicked!");
+		    $("#logoutModal").modal("show"); // ✅ Show confirmation modal
+		});
+
+		$(document).on("click", "#confirmLogout", function () {
+		    console.log("✅ User confirmed logout.");
+
+		    // ✅ Close the modal before logging out
+		    $("#logoutModal").modal("hide");
+
+		    // ✅ Call the logout function
+		    logoutUser();
+		});
+
     }
 
     // ✅ Initialize Admin Dashboard
@@ -200,7 +232,7 @@ $(document).ready(function () {
         // ✅ Load Pets and Adoptions when Admin logs in
         $('#managePetsSection').removeClass('d-none');
         fetchPets();
-        fetchAdoptions();
+       // fetchAdoptions();
 
         // ✅ Sidebar Navigation Click Events
         $('#viewPendingRequestsBtn').off().on('click', function () {
@@ -221,13 +253,22 @@ $(document).ready(function () {
             loadAdoptionList();
         });
 
-        $('#logoutBtn').off().on('click', function () {
-            $('#logoutModal').modal('show');
-        });
+		$(document).on("click", "#logoutBtn", function () {
+		    console.log("🚪 Logout button clicked!");
+		    $("#logoutModal").modal("show"); // ✅ Show confirmation modal
+		});
 
-        $('#confirmLogout').off().on('click', function () {
-            logoutUser();
-        });
+		$(document).on("click", "#confirmLogout", function () {
+		    console.log("✅ User confirmed logout.");
+
+		    // ✅ Close the modal before logging out
+		    $("#logoutModal").modal("hide");
+
+		    // ✅ Call the logout function
+		    logoutUser();
+		});
+
+
 
         console.log("✅ Admin Dashboard Initialized.");
     }
