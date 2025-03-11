@@ -100,4 +100,41 @@ public class AdoptionController {
         List<Adoption> pendingRequests = adoptionRepository.findByUserAndStatus(user, AdoptionStatus.PENDING);
         return ResponseEntity.ok(pendingRequests);
     }
+    
+    
+    @PreAuthorize("hasAuthority('USER')")
+    @PutMapping("/unadopt/{petId}")
+    public ResponseEntity<String> unadoptPet(@PathVariable Long petId, Authentication authentication) {
+        String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new RuntimeException("Pet not found"));
+
+        Optional<Adoption> adoptionOptional = adoptionRepository.findByUserAndPetAndStatus(user, pet, AdoptionStatus.APPROVED);
+
+        if (adoptionOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Adoption record not found or pet is not adopted.");
+        }
+
+        Adoption adoption = adoptionOptional.get();
+
+        // ✅ Ensure the pet is actually adopted before un-adopting
+        if (pet.getStatus() != PetStatus.ADOPTED) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pet is not currently adopted.");
+        }
+
+        // ✅ Mark pet as available again
+        pet.setStatus(PetStatus.AVAILABLE);
+        petRepository.save(pet);
+
+        // ✅ Remove adoption record
+        adoptionRepository.delete(adoption);
+
+        return ResponseEntity.ok("Pet successfully un-adopted.");
+    }
+
+    
+    
 }

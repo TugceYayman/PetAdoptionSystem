@@ -26,6 +26,9 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     
     // ✅ Get all pending adoption requests for a specific user
     List<Adoption> findByUserAndStatus(User user, AdoptionStatus status);
+    
+    Optional<Adoption> findByUserAndPetAndStatus(User user, Pet pet, AdoptionStatus status);
+
 
 
 

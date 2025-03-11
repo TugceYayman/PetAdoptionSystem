@@ -74,6 +74,37 @@ window.renderMyPets = function (pets) {
     container.addClass("show");
 };
 
+// ✅ Unadopt Pet with Confirmation Dialog
+window.unadoptPet = function (petId) {
+    console.log(`🚨 Unadopting pet ID: ${petId}`);
+
+    // ✅ Show Confirmation Dialog
+    if (!confirm("Are you sure you want to un-adopt this pet?")) {
+        console.log("❌ Un-adoption cancelled.");
+        return;
+    }
+
+    let token = localStorage.getItem("token");
+
+    $.ajax({
+        url: `/api/adoptions/unadopt/${petId}`, // ✅ Uses the new endpoint
+        type: "PUT",
+        headers: { "Authorization": "Bearer " + token },
+        success: function () {
+            console.log(`✅ Pet ID ${petId} un-adopted successfully!`);
+            displaySuccessPopup("✅ Pet has been un-adopted successfully!");
+
+            // ✅ Reload My Pets & Available Pets
+            loadMyPets(); // Remove from "My Pets"
+            loadAvailablePets(); // Move back to "View Pets"
+        },
+        error: function (xhr) {
+            console.error("❌ Error un-adopting pet:", xhr.responseText);
+            displayErrorPopup("❌ Failed to un-adopt the pet.");
+        }
+    });
+};
+
 
 $(document).ready(function () {
     console.log("✅ User Dashboard Loaded");
