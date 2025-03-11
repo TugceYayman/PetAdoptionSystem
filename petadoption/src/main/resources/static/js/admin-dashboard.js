@@ -13,7 +13,7 @@ $(document).ready(function () {
 		    }
 		}
 		
-		showAdminSection("managePetsSection");
+		$('#managePetsSection').removeClass('d-none');
 		fetchPets();
 
 		
