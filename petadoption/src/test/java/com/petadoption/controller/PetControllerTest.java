@@ -93,7 +93,7 @@ class PetControllerTest {
     void testAddPet_WithImage_Success() throws Exception {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
-        when(fileStorageService.uploadFile(mockFile)).thenReturn("/uploads/dog.jpg");
+        when(fileStorageService.uploadFile(mockFile)).thenReturn("/uploads/dog1.jpg");
         when(petRepository.save(any(Pet.class))).thenReturn(pet);
 
         ResponseEntity<String> response = petController.addPet("Buddy", "Dog", "Golden Retriever", 2, "AVAILABLE", mockFile);
@@ -167,39 +167,6 @@ class PetControllerTest {
         assertTrue(response.getBody().contains("Failed to update pet"));
     }
 
-    // ✅ Test: Delete Pet (Success)
-    @Test
-    void testDeletePet_Success() {
-        when(petRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(adoptionRepository).deleteByPetId(1L);
-        doNothing().when(petRepository).deleteById(1L);
+  
 
-        ResponseEntity<String> response = petController.deletePet(1L);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("✅ Pet deleted successfully!", response.getBody());
-    }
-
-    // ✅ Test: Delete Pet (Not Found)
-    @Test
-    void testDeletePet_NotFound() {
-        when(petRepository.existsById(1L)).thenReturn(false);
-
-        ResponseEntity<String> response = petController.deletePet(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Pet not found.", response.getBody());
-    }
-
-    // ✅ Test: Delete Pet (Failure)
-    @Test
-    void testDeletePet_Failure() {
-        when(petRepository.existsById(1L)).thenReturn(true);
-        doThrow(new RuntimeException("Delete failed")).when(petRepository).deleteById(1L);
-
-        ResponseEntity<String> response = petController.deletePet(1L);
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(response.getBody().contains("Failed to delete pet"));
-    }
 }

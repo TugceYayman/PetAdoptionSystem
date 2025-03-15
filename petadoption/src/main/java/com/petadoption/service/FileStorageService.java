@@ -45,7 +45,8 @@ public class FileStorageService {
             String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
             Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
-            Files.copy(file.getInputStream(), filePath);
+
+            saveFile(file, filePath); // ✅ This method is now separate
 
             return "/uploads/" + uniqueFilename;
         } catch (IOException e) {
@@ -53,7 +54,8 @@ public class FileStorageService {
         }
     }
 
-    
-    
-    
+    // ✅ Extracted method to allow better testability
+    protected void saveFile(MultipartFile file, Path filePath) throws IOException {
+        Files.copy(file.getInputStream(), filePath);
+    }
 }

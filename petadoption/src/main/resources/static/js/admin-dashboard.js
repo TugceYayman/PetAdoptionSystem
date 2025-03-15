@@ -478,7 +478,7 @@ window.renderPetsForAdmin = function (pets) {
     const rowDiv = $('<div class="row g-4"></div>'); // Bootstrap Grid Layout
 
     pets.forEach((pet) => {
-        let imageUrl = pet.imageUrl ? pet.imageUrl : '/uploads/default-image.jpg'; // ✅ Fix missing images
+        let imageUrl = pet.imageUrl ? pet.imageUrl : '/uploads/not-found.png'; // ✅ Fix missing images
         const petCard = `
             <div class="col-md-4 d-flex align-items-stretch">
                 <div class="card pet-card shadow-sm p-3 rounded w-100">

@@ -147,7 +147,6 @@ $(document).ready(function () {
 
 });
 
-// ✅ Load Available Pets
 function loadAvailablePets() {
     console.log("📡 Fetching Available Pets...");
     let token = localStorage.getItem("token");
@@ -212,7 +211,6 @@ function renderPets(pets) {
     container.addClass("show");
 }
 
-// ✅ Send Adoption Request with Duplicate Check
 function requestAdoption(petId) {
     console.log(`📡 Sending adoption request for pet ID: ${petId}`);
     let token = localStorage.getItem("token");

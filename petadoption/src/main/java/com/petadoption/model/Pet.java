@@ -9,16 +9,15 @@ public class Pet {
     private Long id;
 
     private String name;
-    private String type;  // Dog, Cat, etc.
+    private String type;  
     private String breed;
     private int age;
 
     @Enumerated(EnumType.STRING)
-    private PetStatus status = PetStatus.AVAILABLE; // Available, Adopted
+    private PetStatus status = PetStatus.AVAILABLE; 
 
-    private String imageUrl; // URL for displaying pet pictures
+    private String imageUrl; 
 
-    // Constructors
     public Pet() {}
 
     public Pet(Long id, String name, String type, String breed, int age, PetStatus status, String imageUrl) {
@@ -31,7 +30,6 @@ public class Pet {
         this.imageUrl = imageUrl;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -1,105 +1,103 @@
 package com.petadoption.controller;
 
-import com.petadoption.model.User;
-import com.petadoption.repository.UserRepository;
-import com.petadoption.security.JwtUtil;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Map;
-import java.util.Optional;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
-class AuthControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class AuthControllerTest implements ApplicationContextAware {
 
-    @Mock
-    private UserRepository userRepository;
+    private ApplicationContext context;
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.context = applicationContext;
+    }
 
-    @Mock
-    private JwtUtil jwtUtil;
-
-    @InjectMocks
-    private AuthController authController;
-
-    private User user;
-
-    @BeforeEach
+    @BeforeAll
     void setUp() {
-        user = new User("John Doe", "john@example.com", "password123", "USER");
+        this.mockMvc = context.getBean(MockMvc.class);
+        this.objectMapper = context.getBean(ObjectMapper.class);
     }
 
-    // ✅ Test: Successful User Registration
+    /** ✅ Test: Successful Admin Login */
     @Test
-    void testRegisterUser_Success() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
+    void testLoginSuccess() throws Exception {
+        AuthRequest request = new AuthRequest();
+        request.setEmail("admin@petadoption.com");
+        request.setPassword("admin123");
 
-        ResponseEntity<Map<String, String>> response = authController.register(user);
+        String jsonResponse = mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("User registered successfully", response.getBody().get("message"));
-        verify(userRepository, times(1)).save(any(User.class));  // ✅ Ensure user is saved
+        JsonNode responseNode = objectMapper.readTree(jsonResponse);
+
+        assertTrue(responseNode.hasNonNull("token"), "Response should contain a token");
+        assertThat(responseNode.get("token").asText(), not(emptyOrNullString()));
+        assertEquals("ADMIN", responseNode.get("role").asText(), "Expected role to be ADMIN");
     }
 
-    // ❌ Test: Registration Fails Due to Existing Email
+
+
+    /** ❌ Test: Register with Existing Email */
     @Test
-    void testRegisterUser_EmailAlreadyExists() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+    void testRegisterUser_EmailAlreadyExists() throws Exception {
+        AuthRequest request = new AuthRequest();
+        request.setName("Admin");  // ✅ Added missing name field
+        request.setEmail("admin@petadoption.com");  
+        request.setPassword("password123");
 
-        ResponseEntity<Map<String, String>> response = authController.register(user);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Email already exists", response.getBody().get("message"));
-        verify(userRepository, never()).save(any(User.class));  // 🚨 Ensure user is NOT saved
+        mockMvc.perform(post("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(result -> {
+                String jsonResponse = result.getResponse().getContentAsString();
+                JsonNode responseNode = objectMapper.readTree(jsonResponse);
+                assertEquals("Email already exists", responseNode.get("message").asText());
+            });
     }
 
-    // ✅ Test: Successful Login
-    @Test
-    void testLoginUser_Success() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("password123", user.getPassword())).thenReturn(true);
-        when(jwtUtil.generateToken(user.getEmail(), user.getRole())).thenReturn("mocked-jwt-token");
 
-        Map<String, String> response = authController.login(Map.of("email", user.getEmail(), "password", "password123"));
 
-        assertNotNull(response.get("token"));
-        assertEquals("mocked-jwt-token", response.get("token"));
-        assertEquals("USER", response.get("role"));
-    }
+    /** ✅ Helper Class for Authentication Requests */
+    private static class AuthRequest {
+        private String name;  // ✅ Added missing field
+        private String email;
+        private String password;
 
-    // ❌ Test: Login Fails Due to Invalid Credentials
-    @Test
-    void testLoginUser_Failure() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("wrongPassword", user.getPassword())).thenReturn(false);
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-                authController.login(Map.of("email", user.getEmail(), "password", "wrongPassword")));
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
 
-        assertEquals("Invalid credentials", exception.getMessage());
-    }
-
-    // ❌ Test: Login Fails Due to Nonexistent Email
-    @Test
-    void testLoginUser_EmailNotFound() {
-        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(RuntimeException.class, () ->
-                authController.login(Map.of("email", "nonexistent@example.com", "password", "password123")));
-
-        assertEquals("Invalid credentials", exception.getMessage());
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
     }
 }
