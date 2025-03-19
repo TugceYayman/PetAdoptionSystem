@@ -14,14 +14,12 @@ $(document).ready(function () {
 
         console.log("🔍 Validating form fields...");
 
-        // 🚨 Show "All fields are required" if everything is empty
         if (!name && !email && !password) {
             console.warn("⚠️ All fields are empty!");
             showRegisterError(["⚠️ All fields are required."]);
             return;
         }
 
-        // ✅ Validate Each Field Individually If At Least One Is Filled
         if (!name) {
             console.warn("⚠️ Name field is empty!");
             errorMessages.push("⚠️ Name is required.");
@@ -65,10 +63,8 @@ $(document).ready(function () {
 
             showSuccessPopup(`🎉 ${data.message}`);
 
-            // ✅ Clear Fields After Successful Registration
             $('#registerName, #registerEmail, #registerPassword').val('');
 
-            // ✅ Redirect to login after 1.5 seconds
             setTimeout(() => switchToPage('loginPage'), 1500);
 
         } catch (error) {
@@ -77,7 +73,6 @@ $(document).ready(function () {
         }
     });
 
-    // ✅ Show Errors in a Single Error Box Above the Form
     function showRegisterError(messages) {
         console.log("❌ Displaying errors:", messages);
 
@@ -91,7 +86,6 @@ $(document).ready(function () {
         errorContainer.removeClass('d-none').show();
     }
 
-    // ✅ Show Green Success Popup
     function showSuccessPopup(message) {
         console.log(`✅ Showing success popup: ${message}`);
         const popup = $('<div class="popup-message alert alert-success"></div>')
@@ -113,7 +107,6 @@ $(document).ready(function () {
         setTimeout(() => popup.fadeOut(() => popup.remove()), 3000);
     }
 
-    // ✅ Clear Errors on Input
     $('input').on('input', function () {
         $('#registerErrorContainer').hide(); // Hide error box when typing
     });

@@ -17,7 +17,7 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;  // <- Use interface, not the specific BCrypt class
+    private final PasswordEncoder passwordEncoder;  
     private final JwtUtil jwtUtil;
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {

@@ -15,13 +15,12 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    // ✅ Set absolute upload path to ensure files are stored correctly
     private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
     public FileStorageService() {
         File uploadDir = new File(UPLOAD_DIR);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); // ✅ Ensure upload directory exists
+            uploadDir.mkdirs(); 
         }
     }
 
@@ -46,7 +45,7 @@ public class FileStorageService {
             String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
             Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
 
-            saveFile(file, filePath); // ✅ This method is now separate
+            saveFile(file, filePath); 
 
             return "/uploads/" + uniqueFilename;
         } catch (IOException e) {
@@ -54,7 +53,6 @@ public class FileStorageService {
         }
     }
 
-    // ✅ Extracted method to allow better testability
     protected void saveFile(MultipartFile file, Path filePath) throws IOException {
         Files.copy(file.getInputStream(), filePath);
     }

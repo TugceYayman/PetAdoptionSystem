@@ -1,4 +1,3 @@
-// ✅ Declare Function at Global Scope
 window.showSection = function (sectionId) {
     console.log(`🔄 Showing ${sectionId}`);
 	
@@ -16,7 +15,6 @@ window.showSection = function (sectionId) {
 };
 
 
-// ✅ Load My Adopted Pets
 window.loadMyPets = function () {
     console.log("📡 Fetching My Pets...");
     let token = localStorage.getItem("token");
@@ -35,7 +33,6 @@ window.loadMyPets = function () {
     });
 };
 
-// ✅ Render My Adopted Pets
 window.renderMyPets = function (pets) {
     console.log("📌 Rendering My Pets:", pets);
     const container = $("#myPetsList");
@@ -64,7 +61,6 @@ window.renderMyPets = function (pets) {
         container.append(petCard);
     });
 
-    // ✅ Handle unadoption action
     $(".unadopt-pet").off().on("click", function () {
         let petId = $(this).data("id");
         unadoptPet(petId);
@@ -74,11 +70,9 @@ window.renderMyPets = function (pets) {
 };
 
 
-// ✅ Unadopt Pet with Confirmation Dialog
 window.unadoptPet = function (petId) {
     console.log(`🚨 Unadopting pet ID: ${petId}`);
 
-    // ✅ Show Confirmation Dialog
     if (!confirm("Are you sure you want to un-adopt this pet?")) {
         console.log("❌ Un-adoption cancelled.");
         return;
@@ -94,7 +88,6 @@ window.unadoptPet = function (petId) {
             console.log(`✅ Pet ID ${petId} un-adopted successfully!`);
             displaySuccessPopup("✅ Pet has been un-adopted successfully!");
 
-            // ✅ Reload My Pets & Available Pets
             loadMyPets(); // Remove from "My Pets"
             loadAvailablePets(); // Move back to "View Pets"
         },
@@ -121,11 +114,9 @@ $(document).ready(function () {
 
     $(".dashboard-container").removeClass("d-none");
 
-    // ✅ Load Available Pets Initially
     showSection("petsContainer");
     loadAvailablePets();
 
-    // ✅ Sidebar Navigation Click Events
     $('#viewPetsBtn').off().on('click', function () {
 		if (!token) return;
         showSection("petsContainer");
@@ -172,7 +163,6 @@ function loadAvailablePets() {
     });
 }
 
-// ✅ Render Available Pets
 function renderPets(pets) {
     console.log("📌 Rendering Pets:", pets);
     const container = $("#availablePetsList");
@@ -251,7 +241,6 @@ function requestAdoption(petId) {
     });
 }
 
-// ✅ Load Pending Requests
 function loadPendingRequests() {
     console.log("📡 Fetching Pending Requests...");
     let token = localStorage.getItem("token");
@@ -294,8 +283,6 @@ function renderPendingRequests(requests) {
 
 
 
-
-// ✅ Popups
 function displayErrorPopup(message) {
     console.log(`🛑 Showing error popup: ${message}`);
     alert(message);

@@ -8,7 +8,6 @@ $(document).ready(function () {
 	       $('#addPetModal').hide();
 	   });
 	   
-	   // ✅ Add Pet with Image Upload
 	   $(document).on('click', '#confirmAddPet', function () {
 	       addPet();
 	   });
@@ -21,14 +20,12 @@ $(document).ready(function () {
 $(document).ready(function () {
 	
 	
-    // ✅ Event Listener for Animal Distribution Button
     $('#viewAnimalDistributionBtn').on('click', function () {
         showAdminSection("animalDistributionSection");
         fetchAnimalDistribution();
     });
 });
 
-// ✅ Function to Fetch Animal Distribution Data
 function fetchAnimalDistribution() {
     let token = localStorage.getItem('token');
 
@@ -57,7 +54,6 @@ function renderAnimalDistributionChart(pets) {
 
     let canvas = document.getElementById('animalChart');
 
-    // ✅ Fix Chart Size
     canvas.style.width = "100%";
     canvas.style.height = "auto";
 
@@ -65,7 +61,6 @@ function renderAnimalDistributionChart(pets) {
         window.animalChartInstance.destroy();
     }
 
-    // 🎨 Define Custom Colors for Animals
     let colorPalette = [
         'rgba(255, 99, 132, 0.6)', // Red
         'rgba(54, 162, 235, 0.6)', // Blue
@@ -84,7 +79,6 @@ function renderAnimalDistributionChart(pets) {
         'rgba(255, 159, 64, 1)'
     ];
 
-    // ✅ Assign a unique color to each animal type
     let backgroundColors = labels.map((_, i) => colorPalette[i % colorPalette.length]);
     let borderColors = labels.map((_, i) => borderColorPalette[i % borderColorPalette.length]);
 
@@ -96,8 +90,8 @@ function renderAnimalDistributionChart(pets) {
             datasets: [{
                 label: 'Number of Animals',
                 data: dataValues,
-                backgroundColor: backgroundColors, // ✅ Assign multiple colors
-                borderColor: borderColors, // ✅ Assign border colors
+                backgroundColor: backgroundColors, 
+                borderColor: borderColors, 
                 borderWidth: 1
             }]
         },
@@ -107,10 +101,10 @@ function renderAnimalDistributionChart(pets) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    stepSize: 1,  // ✅ Force whole number increments
+                    stepSize: 1,  
                     ticks: {
                         callback: function(value) {
-                            return Number.isInteger(value) ? value : ''; // ✅ Hide decimals
+                            return Number.isInteger(value) ? value : ''; 
                         }
                     }
                 }
@@ -126,26 +120,23 @@ $(document).ready(function () {
 	
 	if (!$("#adminDashboardPage").is(":visible")) {
 	    console.warn("🚨 Admin Dashboard is hidden. Skipping admin scripts.");
-	    return;  // ✅ Prevents execution if it's hidden
+	    return;  
 	}
 
 
 	    let token = localStorage.getItem('token');
 	    let userRole = localStorage.getItem('userRole');
 
-		// ✅ Prevent infinite loop by checking if already on index.html (Login Page)
 		 if (!token || userRole !== 'ADMIN') {
 		     console.warn("🚨 Unauthorized Access. Redirecting to Login...");
 
-		     // 🚀 FIX: Only redirect if not already on the login page
 		     if (window.location.pathname !== "/index.html") { 
 		         window.location.href = "index.html";
 		     }
-		     return;  // 🚀 Prevent further execution
+		     return;  
 		 }
 
 
-		// ✅ Only fetch data if a valid token exists
 		if (token) {
 		    $('#managePetsSection').removeClass('d-none');
 		    fetchPets();
@@ -155,7 +146,7 @@ $(document).ready(function () {
 
 		
 		$('#viewPendingRequestsBtn').on('click', function () {
-		        if (!token) return; // ✅ Don't fetch if no token
+		        if (!token) return; 
 		        $('#pendingRequestsSection').removeClass('d-none');
 		        $('#managePetsSection').addClass('d-none');
 		        $('#adoptionListSection').addClass('d-none');
@@ -165,7 +156,7 @@ $(document).ready(function () {
 		    });
 
 		    $('#managePetsBtn').on('click', function () {
-		        if (!token) return; // ✅ Don't fetch if no token
+		        if (!token) return; 
 		        $('#managePetsSection').removeClass('d-none');
 		        $('#pendingRequestsSection').addClass('d-none');
 		        $('#adoptionListSection').addClass('d-none');
@@ -174,7 +165,7 @@ $(document).ready(function () {
 		    });
 
 		    $('#viewAdoptionListBtn').off().on("click", function () {
-		        if (!token) return; // ✅ Don't fetch if no token
+		        if (!token) return; 
 				$('#viewAnimalDistributionBtn').addClass('d-none');
 
 		        showAdminSection("adoptionListSection");
@@ -183,7 +174,6 @@ $(document).ready(function () {
 
 	
 
-    // ✅ Event Listeners for Modals
     $(document).on('click', '#addPetButton', function () {
         $('#addPetModal').removeClass('d-none').show();
     });
@@ -197,7 +187,6 @@ $(document).ready(function () {
     });
 
 
-    // ✅ Update Pet with Image Upload
     $(document).on('click', '#confirmUpdatePet', function () {
         updatePet();
     });
@@ -218,7 +207,6 @@ function showAdminSection(sectionId) {
         "opacity": "1"
     });
 
-    // ✅ Destroy the chart instance when switching sections
     if (sectionId !== "animalDistributionSection" && window.animalChartInstance) {
         window.animalChartInstance.destroy();
         window.animalChartInstance = null; // Clear the chart instance
@@ -272,7 +260,6 @@ function loadAdoptionList() {
        });
    }
 
-// ✅ Add Pet with File Upload
 function addPet() {
     let token = localStorage.getItem('token');
     let formData = new FormData();
@@ -306,7 +293,6 @@ function addPet() {
     });
 }
 
-// ✅ Open Update Pet Modal
 function openUpdateModal(petId) {
     console.log(`📝 Fetching Pet ${petId} for Update...`);
 
@@ -329,10 +315,8 @@ function openUpdateModal(petId) {
 }
 
 
-// ✅ Define selectedPetId globally
 let selectedPetId = null;
 
-// ✅ Function to Open Update Modal & Set Selected Pet
 function showUpdateModal(id, name, type, breed, age, status) {
     selectedPetId = id; // Set the selected pet ID globally
 
@@ -347,7 +331,6 @@ function showUpdateModal(id, name, type, breed, age, status) {
     $('#updatePetModal').removeClass('d-none').show();
 }
 
-// ✅ Function to Update Pet Details
 function updatePet() {
     const petId = selectedPetId;
     if (!petId) {
@@ -388,7 +371,6 @@ function updatePet() {
 
 
 
-// ✅ Show Error Popup Instead of Alert
 function showPopup(message, type) {
     const popup = $('<div class="popup-message"></div>').text(message);
     popup.addClass(type === "error" ? "alert-danger" : "alert-success");
@@ -414,7 +396,6 @@ function showErrorPopup(message) {
 
 
 
-// ✅ Fetch Pets with Detailed Logging
 window.fetchPets = function () {
     console.log("📡 Fetching Pets...");
     let token = localStorage.getItem('token');  
@@ -443,33 +424,8 @@ window.fetchPets = function () {
     });
 };
 
-// ✅ Fetch Adoptions
-/*window.fetchAdoptions = function () {
-    console.log("📡 Fetching Adoptions...");
-    let token = localStorage.getItem('token'); 
-	if (!token) {
-	       console.warn("🚨 Authentication token missing. Not fetching adoptions.");
-	       return;
-	   } 
-    $.ajax({
-        url: '/api/admin/adoptions',
-        headers: { 'Authorization': 'Bearer ' + token },
-        success: function (adoptions) {
-            console.log("✅ Adoptions Fetched:", adoptions);
-            if (!adoptions || adoptions.length === 0) {
-                $('#adoptionsTableContainer').html('<p class="text-center">No pending adoptions.</p>');
-            } else {
-                renderAdoptions(adoptions);
-            }
-        },
-        error: function (xhr) {
-            console.error("❌ Error fetching adoptions:", xhr.responseText);
-            showErrorPopup("Failed to load adoptions.");
-        }
-    });
-};*/
 
-// ✅ Render Pets with 3-Column Layout
+
 window.renderPetsForAdmin = function (pets) {
     console.log("📌 Rendering Pets...");
     const container = $('#petsCardContainer');
@@ -512,7 +468,6 @@ window.renderPetsForAdmin = function (pets) {
 
     container.append(rowDiv); // Append full row to container
 
-    // ✅ Attach event listeners dynamically
     $(document).off('click', '.remove-pet').on('click', '.remove-pet', function () {
         const petId = $(this).data('id');
         confirmRemovePet(petId);
@@ -531,7 +486,6 @@ window.renderPetsForAdmin = function (pets) {
 };
 
 
-// ✅ Confirmation Before Removing Pet
 function confirmRemovePet(petId) {
     if (confirm("⚠️ Are you sure you want to remove this pet? This action cannot be undone!")) {
         removePet(petId);
@@ -567,13 +521,11 @@ window.removePet = function (petId) {
 };
 
 
-// ✅ Add Pet with Image Upload
-// ✅ Add Pet with File Upload
+
 window.addPet = function () {
     let token = localStorage.getItem('token');
     let formData = new FormData();
 
-    // ✅ Collect all pet details
     formData.append("name", $('#petName').val().trim());
     formData.append("type", $('#petType').val().trim());
     formData.append("breed", $('#petBreed').val().trim());
@@ -614,7 +566,6 @@ window.addPet = function () {
 };
 
 
-// ✅ Fetch Pending Adoption Requests
 function fetchPendingRequests() {
     console.log("📡 Fetching Pending Requests...");
     let token = localStorage.getItem('token');
@@ -646,7 +597,6 @@ function fetchPendingRequests() {
                 tableBody.append(row);
             });
 
-            // ✅ Handle Approve/Reject Buttons
             $('.approve-request').on('click', function () {
                 handleAdoptionRequest($(this).data('id'), 'approve');
             });
@@ -661,7 +611,6 @@ function fetchPendingRequests() {
     });
 }
 
-// ✅ Handle Approve/Reject Adoption Request
 function handleAdoptionRequest(requestId, action) {
     let token = localStorage.getItem('token');
     let endpoint = `/api/admin/adoptions/${action}/${requestId}`;

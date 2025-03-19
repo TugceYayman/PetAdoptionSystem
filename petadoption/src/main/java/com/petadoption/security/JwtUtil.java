@@ -20,7 +20,7 @@ public class JwtUtil {
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", List.of(role)) // ✅ Store role properly
+                .claim("role", List.of(role)) 
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(jwtSecretKey)
@@ -47,10 +47,10 @@ public class JwtUtil {
 
         if (rolesObject instanceof List<?>) {
             return ((List<?>) rolesObject).stream()
-                    .map(Object::toString)  // Ensure all elements are Strings
+                    .map(Object::toString)  
                     .collect(Collectors.toList());
         } else if (rolesObject instanceof String) {
-            return List.of(rolesObject.toString()); // Handle single role as String
+            return List.of(rolesObject.toString());
         } else {
             return new ArrayList<>();
         }
@@ -61,7 +61,7 @@ public class JwtUtil {
     public Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(jwtSecretKey)  // ✅ Ensure same key is used
+                    .setSigningKey(jwtSecretKey)  
                     .build()
                     .parseClaimsJws(token)
                     .getBody();

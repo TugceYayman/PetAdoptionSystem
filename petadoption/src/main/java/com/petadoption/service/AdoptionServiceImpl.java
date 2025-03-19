@@ -25,12 +25,10 @@ public class AdoptionServiceImpl implements AdoptionService {
         Pet pet = petRepository.findById(petId)
             .orElseThrow(() -> new RuntimeException("Pet not found"));
 
-        // ✅ Prevent adopting already adopted pets
         if (pet.getStatus() == PetStatus.ADOPTED) {
             throw new RuntimeException("Pet is already adopted");
         }
 
-        // ✅ Check if the user has already sent a request for this pet
         if (adoptionRepository.existsByUserAndPet(user, pet)) {
             throw new RuntimeException("You have already requested adoption for this pet.");
         }

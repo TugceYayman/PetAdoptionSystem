@@ -47,7 +47,6 @@ public class SecurityConfig {
         return http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // Public pages (login/register pages and static assets)
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/static/**", "/img/**").permitAll()
                 .requestMatchers(
                         "/",
@@ -56,7 +55,6 @@ public class SecurityConfig {
                         "/register.html"
                 ).permitAll()
 
-                // Public auth endpoints
                 .requestMatchers("/auth/**").permitAll()
 
                 // H2 Console (for local development)
@@ -70,20 +68,13 @@ public class SecurityConfig {
                 // Ensure only ADMIN can modify pets
                 .requestMatchers(HttpMethod.PUT, "/api/pets/**").hasAuthority("ADMIN")
                  .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasAuthority("ADMIN")
-               // .requestMatchers(HttpMethod.DELETE, "/api/pets/**").hasRole("ADMIN")
 
 
-                // ✅ Allow users to access pending requests
                 .requestMatchers("/api/adoptions/my-pets", "/api/adoptions/my-requests", "/api/adoptions/pending-requests").hasAuthority("USER") // ✅ Ensure correct permissions
                 .requestMatchers("/api/adoptions/**").authenticated()
                 .requestMatchers("/api/pets/**").authenticated()
-                .requestMatchers("/api/admin/adoptions/**").hasAuthority("ADMIN") // ✅ Allow only admins
-              //  .requestMatchers("/api/admin/adoptions/**").authenticated()
-             //   .requestMatchers("/api/adoptions/**").hasAnyAuthority("ADMIN", "USER")
+                .requestMatchers("/api/admin/adoptions/**").hasAuthority("ADMIN") 
 
-
-
-                // Catch-all: any other requests must be authenticated
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,10 +1,8 @@
 $(document).ready(function () {
     console.log("🚀 Login Page Loaded!");
 
-    // ✅ Show login page initially
     switchToPage('loginPage');
 
-    // ✅ Handle switching between login and register pages
     $('#goToRegister').on('click', function (e) {
         e.preventDefault();
         switchToPage('registerPage');
@@ -15,7 +13,6 @@ $(document).ready(function () {
         switchToPage('loginPage');
     });
 
-    // ✅ Handle login form submission
     $('#loginForm').on('submit', function (e) {
         e.preventDefault();
 
@@ -29,14 +26,12 @@ $(document).ready(function () {
 
         console.log("🔍 Validating login fields...");
 
-        // 🚨 Show "All fields are required" if both fields are empty
         if (!email && !password) {
             console.warn("⚠️ Both fields are empty!");
             showLoginError(["⚠️ All fields are required."]);
             return;
         }
 
-        // ✅ Validate Email and Password Separately
         if (!email) {
             console.warn("⚠️ Email field is empty!");
             errorMessages.push("⚠️ Email is required.");
@@ -96,26 +91,20 @@ $(document).ready(function () {
         });
     });
 
-	// ✅ Function to Logout User and Show Success Message
 	function logoutUser() {
 	    console.log("🚪 Logging out user...");
 
-	    // ✅ Close the logout modal before logging out
 	    $("#logoutModal").modal("hide");
 
-	    // ✅ Remove stored authentication data
 	    localStorage.removeItem("token");
 	    localStorage.removeItem("userRole");
 
-	    // ✅ Hide all sections before redirecting
 	    $(".dashboard-container").addClass("d-none");
 	    $("#pendingRequestsSection, #adoptionListSection, #animalDistributionSection, #managePetsSection, #userDashboardPage, #adminDashboardPage").addClass("d-none");
 
-	    // ✅ Redirect to login page with a success message
 	    setTimeout(() => {
 	        switchToPage("loginPage");
 
-	        // ✅ Show a success message after redirecting
 	        showSuccessPopup("✅ You have been logged out successfully!");
 	        console.log("🔄 Redirected to login page with success message.");
 	    }, 300);
@@ -123,7 +112,6 @@ $(document).ready(function () {
 
 
 
-    // ✅ Function to switch between pages
     function switchToPage(pageId) {
         console.log(`🔄 Switching to page: ${pageId}`);
         $('.page').hide();
@@ -167,7 +155,6 @@ $(document).ready(function () {
 
 
 
-    // ✅ Initialize User Dashboard
     function initializeUserDashboard() {
         console.log("🔄 Initializing User Dashboard...");
 
@@ -179,13 +166,11 @@ $(document).ready(function () {
 
         $(".dashboard-container").removeClass("d-none");
 
-        // ✅ Load Available Pets as Default View
         showSection("petsContainer");
         setTimeout(() => {
             loadAvailablePets();
         }, 500);
 
-        // ✅ Assign Sidebar Button Clicks
         $('#viewPetsBtn').off().on('click', function () {
             showSection("petsContainer");
             loadAvailablePets();
@@ -209,16 +194,13 @@ $(document).ready(function () {
 		$(document).on("click", "#confirmLogout", function () {
 		    console.log("✅ User confirmed logout.");
 
-		    // ✅ Close the modal before logging out
 		    $("#logoutModal").modal("hide");
 
-		    // ✅ Call the logout function
 		    logoutUser();
 		});
 
     }
 
-    // ✅ Initialize Admin Dashboard
     function initializeAdminDashboard() {
         console.log("🚀 Initializing Admin Dashboard...");
 
@@ -229,12 +211,10 @@ $(document).ready(function () {
 		
 		$("#pendingRequestsSection, #adoptionListSection, #animalDistributionSection, #managePetsSection").addClass("d-none");
 
-        // ✅ Load Pets and Adoptions when Admin logs in
         $('#managePetsSection').removeClass('d-none');
         fetchPets();
        // fetchAdoptions();
 
-        // ✅ Sidebar Navigation Click Events
         $('#viewPendingRequestsBtn').off().on('click', function () {
             console.log("🔄 Fetching Pending Requests...");
             showAdminSection("pendingRequestsSection");
@@ -261,10 +241,8 @@ $(document).ready(function () {
 		$(document).on("click", "#confirmLogout", function () {
 		    console.log("✅ User confirmed logout.");
 
-		    // ✅ Close the modal before logging out
 		    $("#logoutModal").modal("hide");
 
-		    // ✅ Call the logout function
 		    logoutUser();
 		});
 
@@ -273,7 +251,6 @@ $(document).ready(function () {
         console.log("✅ Admin Dashboard Initialized.");
     }
 
-    // ✅ Show Errors in a Single Box Above the Form
     function showLoginError(messages) {
         console.log("❌ Displaying login errors:", messages);
 
@@ -287,7 +264,6 @@ $(document).ready(function () {
         errorContainer.removeClass('d-none').show();
     }
 
-    // ✅ Show Green Success Popup
     function showSuccessPopup(message) {
         console.log(`✅ Showing success popup: ${message}`);
         const popup = $('<div class="popup-message alert alert-success"></div>')

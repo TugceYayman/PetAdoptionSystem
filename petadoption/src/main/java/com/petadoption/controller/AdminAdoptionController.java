@@ -37,7 +37,6 @@ public class AdminAdoptionController {
         return ResponseEntity.ok(pendingRequests);
     }
 
-    // ✅ Approve an adoption request
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/approve/{requestId}")
     public ResponseEntity<String> approveAdoption(@PathVariable Long requestId) {
@@ -59,7 +58,7 @@ public class AdminAdoptionController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(REQUEST_NOT_FOUND));
     }
 
-    // ✅ Reject an adoption request
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/reject/{requestId}")
     public ResponseEntity<String> rejectAdoption(@PathVariable Long requestId) {
