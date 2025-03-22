@@ -27,7 +27,7 @@ pipeline {
                             url: 'https://github.com/TugceYayman/PetAdoptionSystem.git',
                             credentialsId: 'github-ssh'
                           ]],
-                          branches: [[name: 'master']]])
+                          branches: [[name: 'feature/development']]])
             }
         }
 
@@ -73,25 +73,26 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                dir('petadoption') {
-                    bat """
-                    mvn sonar:sonar ^
-                      -Dsonar.token=%SONARQUBE_TOKEN% ^
-                      -Dsonar.host.url=%SONAR_HOST_URL% ^
-                      -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
-                      -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report-merged/jacoco.xml ^
-                      -Dsonar.java.binaries=target/classes
-                    """
-                }
-            }
-            post {
-                always {
-                    echo 'SonarQube analysis completed'
-                }
-            }
-        }
+		stage('SonarQube Analysis') {
+		    steps {
+		        withSonarQubeEnv('sonarqube') {
+		            dir('petadoption') {
+		                bat """
+		                mvn sonar:sonar ^
+		                  -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+		                  -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report-merged/jacoco.xml ^
+		                  -Dsonar.java.binaries=target/classes
+		                """
+		            }
+		        }
+		    }
+		    post {
+		        always {
+		            echo 'SonarQube analysis completed'
+		        }
+		    }
+		}
+
 
         stage('Archive Artifacts') {
             steps {
