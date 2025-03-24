@@ -16,8 +16,6 @@ class FileStorageServiceTest {
 
     private FileStorageService fileStorageService;
 
-    @TempDir
-    Path tempDir;
 
     @BeforeEach
     void setUp() {
@@ -25,7 +23,7 @@ class FileStorageServiceTest {
     }
 
     @Test
-    void testUploadFile_Success() throws IOException {
+    void testUploadFile_Success() {
         // Mock a valid image file
         MockMultipartFile mockFile = new MockMultipartFile(
                 "file", 
@@ -34,17 +32,14 @@ class FileStorageServiceTest {
                 "sample image content".getBytes()
         );
 
-        // Call the method
         String storedFilePath = fileStorageService.uploadFile(mockFile);
 
-        // Verify that the file is stored in the correct directory
         assertNotNull(storedFilePath);
         assertTrue(storedFilePath.contains("/uploads/"));
     }
 
     @Test
     void testUploadFile_EmptyFile() {
-        // Mock an empty file
         MockMultipartFile emptyFile = new MockMultipartFile(
                 "file", 
                 "empty.jpg", 
@@ -67,14 +62,12 @@ class FileStorageServiceTest {
                 "pdf content".getBytes()
         );
 
-        // Expect an IllegalArgumentException
         Exception exception = assertThrows(IllegalArgumentException.class, () -> fileStorageService.uploadFile(invalidFile));
         assertEquals("Invalid file type! Only JPG, JPEG, PNG are allowed.", exception.getMessage());
     }
 
     @Test
     void testUploadFile_IOExceptionHandling() throws IOException {
-        // Mock a valid file
         MockMultipartFile mockFile = new MockMultipartFile(
                 "file", 
                 "image.jpg", 
@@ -82,7 +75,6 @@ class FileStorageServiceTest {
                 "sample image content".getBytes()
         );
 
-        // Spy on the service and mock the exception in saveFile
         FileStorageService spyService = Mockito.spy(fileStorageService);
         Mockito.doThrow(new IOException("Simulated IOException"))
                .when(spyService)
