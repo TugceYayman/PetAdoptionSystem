@@ -131,7 +131,7 @@ class PetControllerTest {
     }
 
     @Test
-    void testUpdatePet_WithImage_Success() throws Exception {
+    void testUpdatePet_WithImage_Success()  {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
         when(fileStorageService.uploadFile(mockFile)).thenReturn("/uploads/dog.jpg");
@@ -145,7 +145,7 @@ class PetControllerTest {
     }
 
     @Test
-    void testUpdatePet_FailedImageUpload() throws Exception {
+    void testUpdatePet_FailedImageUpload()  {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
         when(fileStorageService.uploadFile(mockFile)).thenThrow(new RuntimeException("Upload failed"));

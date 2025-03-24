@@ -1,5 +1,6 @@
 package com.petadoption.service;
 
+import com.petadoption.exception.FileStorageException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,15 +16,13 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    // ✅ Set absolute upload path to ensure files are stored correctly
-    private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
-
+    private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
 
     public FileStorageService() {
-        File uploadDir = new File(UPLOAD_DIR);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); // ✅ Ensure upload directory exists
+        File uploadFolder = new File(uploadDir);
+        if (!uploadFolder.exists()) {
+            uploadFolder.mkdirs();
         }
     }
 
@@ -48,17 +47,14 @@ public class FileStorageService {
         try {
             String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
-            Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
-
+            Path filePath = Paths.get(uploadDir, uniqueFilename);
             saveFile(file, filePath);
-
             return "/uploads/" + uniqueFilename;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
+            throw new FileStorageException("Failed to store file: " + e.getMessage(), e);
         }
     }
 
-    // ✅ Extracted method to allow better testability
     protected void saveFile(MultipartFile file, Path filePath) throws IOException {
         Files.copy(file.getInputStream(), filePath);
     }
