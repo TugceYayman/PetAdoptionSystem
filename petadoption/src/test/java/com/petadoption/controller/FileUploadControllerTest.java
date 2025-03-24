@@ -1,4 +1,5 @@
 package com.petadoption.controller;
+import org.springframework.http.HttpStatus;
 
 import com.petadoption.service.FileStorageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,13 +46,12 @@ class FileUploadControllerTest {
 
         ResponseEntity<Map<String, String>> response = fileUploadController.uploadFile(mockFile);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(fileUrl, response.getBody().get("url"));
 
         verify(fileStorageService, times(1)).uploadFile(mockFile);
     }
 
-    
 
 }

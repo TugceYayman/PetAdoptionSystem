@@ -1,7 +1,10 @@
 package com.petadoption.service;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
+
+import com.petadoption.exception.*;
 import com.petadoption.model.*;
 import com.petadoption.repository.*;
 
@@ -21,18 +24,16 @@ public class AdoptionServiceImpl implements AdoptionService {
     @Override
     public Adoption requestAdoption(Long petId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         Pet pet = petRepository.findById(petId)
-            .orElseThrow(() -> new RuntimeException("Pet not found"));
+                .orElseThrow(() -> new PetNotFoundException("Pet not found"));
 
-        // ✅ Prevent adopting already adopted pets
         if (pet.getStatus() == PetStatus.ADOPTED) {
-            throw new RuntimeException("Pet is already adopted");
+            throw new PetAlreadyAdoptedException("Pet is already adopted");
         }
 
-        // ✅ Check if the user has already sent a request for this pet
         if (adoptionRepository.existsByUserAndPet(user, pet)) {
-            throw new RuntimeException("You have already requested adoption for this pet.");
+            throw new AlreadyRequestedException("You have already requested adoption for this pet.");
         }
 
         Adoption adoption = new Adoption(user, pet, AdoptionStatus.PENDING);
@@ -42,7 +43,7 @@ public class AdoptionServiceImpl implements AdoptionService {
     @Override
     public List<Adoption> getUserAdoptions(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         return adoptionRepository.findByUser(user);
     }
 }

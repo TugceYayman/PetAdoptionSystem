@@ -7,13 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 @SpringBootTest
 class SecurityConfigIT {
 
-    @Autowired
-    private SecurityConfig securityConfig;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -24,7 +23,7 @@ class SecurityConfigIT {
     @Test
     void testPasswordEncoder() {
         assertNotNull(passwordEncoder);
-        assertTrue(passwordEncoder.encode("password").length() > 0);
+        assertFalse(passwordEncoder.encode("password").isEmpty());
     }
 
     @Test

@@ -10,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -40,7 +38,6 @@ class AuthControllerTest implements ApplicationContextAware {
         this.objectMapper = context.getBean(ObjectMapper.class);
     }
 
-    /** ✅ Test: Successful Admin Login */
     @Test
     void testLoginSuccess() throws Exception {
         AuthRequest request = new AuthRequest();
@@ -64,11 +61,10 @@ class AuthControllerTest implements ApplicationContextAware {
 
 
 
-    /** ❌ Test: Register with Existing Email */
     @Test
     void testRegisterUser_EmailAlreadyExists() throws Exception {
         AuthRequest request = new AuthRequest();
-        request.setName("Admin");  // ✅ Added missing name field
+        request.setName("Admin");  
         request.setEmail("admin@petadoption.com");  
         request.setPassword("password123");
 
@@ -85,9 +81,8 @@ class AuthControllerTest implements ApplicationContextAware {
 
 
 
-    /** ✅ Helper Class for Authentication Requests */
     private static class AuthRequest {
-        private String name;  // ✅ Added missing field
+        private String name;  
         private String email;
         private String password;
 

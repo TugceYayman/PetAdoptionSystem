@@ -1,10 +1,12 @@
 package com.petadoption.service;
 
+import com.petadoption.exception.*;
 import com.petadoption.model.*;
 import com.petadoption.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,10 +22,10 @@ class AdoptionServiceImplTest {
 
     @Mock
     private AdoptionRepository adoptionRepository;
-    
+
     @Mock
     private PetRepository petRepository;
-    
+
     @Mock
     private UserRepository userRepository;
 
@@ -49,16 +51,13 @@ class AdoptionServiceImplTest {
 
     @Test
     void testRequestAdoption_Success() {
-        // Mock user and pet repositories
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(mockUser));
         when(petRepository.findById(mockPet.getId())).thenReturn(Optional.of(mockPet));
         when(adoptionRepository.existsByUserAndPet(mockUser, mockPet)).thenReturn(false);
         when(adoptionRepository.save(any(Adoption.class))).thenReturn(mockAdoption);
 
-        // Call method
         Adoption result = adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail());
 
-        // Verify and assert
         assertNotNull(result);
         assertEquals(mockUser, result.getUser());
         assertEquals(mockPet, result.getPet());
@@ -70,8 +69,8 @@ class AdoptionServiceImplTest {
     void testRequestAdoption_UserNotFound() {
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail()));
+        Executable action = () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail());
+        Exception exception = assertThrows(UserNotFoundException.class, action);
 
         assertEquals("User not found", exception.getMessage());
     }
@@ -81,8 +80,8 @@ class AdoptionServiceImplTest {
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(mockUser));
         when(petRepository.findById(mockPet.getId())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail()));
+        Executable action = () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail());
+        Exception exception = assertThrows(PetNotFoundException.class, action);
 
         assertEquals("Pet not found", exception.getMessage());
     }
@@ -90,12 +89,11 @@ class AdoptionServiceImplTest {
     @Test
     void testRequestAdoption_PetAlreadyAdopted() {
         mockPet.setStatus(PetStatus.ADOPTED);
-
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(mockUser));
         when(petRepository.findById(mockPet.getId())).thenReturn(Optional.of(mockPet));
 
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail()));
+        Executable action = () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail());
+        Exception exception = assertThrows(PetAlreadyAdoptedException.class, action);
 
         assertEquals("Pet is already adopted", exception.getMessage());
     }
@@ -106,8 +104,8 @@ class AdoptionServiceImplTest {
         when(petRepository.findById(mockPet.getId())).thenReturn(Optional.of(mockPet));
         when(adoptionRepository.existsByUserAndPet(mockUser, mockPet)).thenReturn(true);
 
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail()));
+        Executable action = () -> adoptionService.requestAdoption(mockPet.getId(), mockUser.getEmail());
+        Exception exception = assertThrows(AlreadyRequestedException.class, action);
 
         assertEquals("You have already requested adoption for this pet.", exception.getMessage());
     }
@@ -115,7 +113,6 @@ class AdoptionServiceImplTest {
     @Test
     void testGetUserAdoptions_Success() {
         List<Adoption> mockAdoptions = List.of(mockAdoption);
-
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(mockUser));
         when(adoptionRepository.findByUser(mockUser)).thenReturn(mockAdoptions);
 
@@ -130,8 +127,8 @@ class AdoptionServiceImplTest {
     void testGetUserAdoptions_UserNotFound() {
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> adoptionService.getUserAdoptions(mockUser.getEmail()));
+        Executable action = () -> adoptionService.getUserAdoptions(mockUser.getEmail());
+        Exception exception = assertThrows(UserNotFoundException.class, action);
 
         assertEquals("User not found", exception.getMessage());
     }

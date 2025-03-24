@@ -1,7 +1,6 @@
 package com.petadoption.config;
 
 import com.petadoption.model.Pet;
-import com.petadoption.model.PetStatus;
 import com.petadoption.model.User;
 import com.petadoption.repository.PetRepository;
 import com.petadoption.repository.UserRepository;
@@ -39,7 +38,7 @@ class DataLoaderTest {
     @Captor
     private ArgumentCaptor<List<Pet>> petListCaptor;
 
-    private final String ADMIN_PASSWORD = "testpassword";
+    private final String adminPassword = "testpassword";
 
     @BeforeEach
     void setUp() {
@@ -47,19 +46,11 @@ class DataLoaderTest {
     }
 
     @Test
-    void testInitData_ShouldLoadSamplePets_WhenNoPetsExist() {
-        // Arrange
+    void testInitData_ShouldLoadSamplePets_WhenNoPetsExist() throws Exception {
         when(petRepository.count()).thenReturn(0L);
 
-        // Act
-        try {
-			dataLoader.initData(petRepository, userRepository, passwordEncoder, ADMIN_PASSWORD).run();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        dataLoader.initData(petRepository, userRepository, passwordEncoder, adminPassword).run();
 
-        // Assert
         verify(petRepository, times(1)).saveAll(petListCaptor.capture());
         List<Pet> savedPets = petListCaptor.getValue();
         assertFalse(savedPets.isEmpty());
@@ -68,36 +59,20 @@ class DataLoaderTest {
     }
 
     @Test
-    void testInitData_ShouldNotLoadSamplePets_WhenPetsAlreadyExist() {
-        // Arrange
+    void testInitData_ShouldNotLoadSamplePets_WhenPetsAlreadyExist() throws Exception {
         when(petRepository.count()).thenReturn(10L);
 
-        // Act
-        try {
-			dataLoader.initData(petRepository, userRepository, passwordEncoder, ADMIN_PASSWORD).run();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        dataLoader.initData(petRepository, userRepository, passwordEncoder, adminPassword).run();
 
-        // Assert
         verify(petRepository, never()).saveAll(anyList());
     }
 
     @Test
-    void testInitData_ShouldCreateAdminUser_WhenAdminDoesNotExist() {
-        // Arrange
+    void testInitData_ShouldCreateAdminUser_WhenAdminDoesNotExist() throws Exception {
         when(userRepository.findByEmail("admin@petadoption.com")).thenReturn(Optional.empty());
 
-        // Act
-        try {
-			dataLoader.initData(petRepository, userRepository, passwordEncoder, ADMIN_PASSWORD).run();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        dataLoader.initData(petRepository, userRepository, passwordEncoder, adminPassword).run();
 
-        // Assert
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository, times(1)).save(userCaptor.capture());
 
@@ -106,5 +81,4 @@ class DataLoaderTest {
         assertEquals("ADMIN", savedAdmin.getRole());
         assertEquals("encodedPassword", savedAdmin.getPassword());
     }
-
 }

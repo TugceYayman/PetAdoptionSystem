@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +56,6 @@ class AdoptionControllerTest {
         when(authentication.getName()).thenReturn(user.getEmail());
     }
 
-    // ✅ Test: Request Adoption (Success)
     @Test
     void testRequestAdoption_Success() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -71,7 +69,6 @@ class AdoptionControllerTest {
         verify(adoptionRepository, times(1)).save(any(Adoption.class));
     }
 
-    // ✅ Test: Request Adoption (User Not Found)
     @Test
     void testRequestAdoption_UserNotFound() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
@@ -83,7 +80,6 @@ class AdoptionControllerTest {
         assertEquals("User not found.", exception.getReason());
     }
 
-    // ✅ Test: Request Adoption (Pet Not Found)
     @Test
     void testRequestAdoption_PetNotFound() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -96,7 +92,6 @@ class AdoptionControllerTest {
         assertEquals("Pet not found.", exception.getReason());
     }
 
-    // ✅ Test: Request Adoption (Pet Already Adopted)
     @Test
     void testRequestAdoption_PetAlreadyAdopted() {
         pet.setStatus(PetStatus.ADOPTED);
@@ -109,7 +104,6 @@ class AdoptionControllerTest {
         assertEquals("Pet is already adopted.", response.getBody());
     }
 
-    // ✅ Test: Get My Adopted Pets (Success)
     @Test
     void testGetMyAdoptedPets_Success() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -122,7 +116,6 @@ class AdoptionControllerTest {
         assertEquals(pet, response.getBody().get(0));
     }
 
-    // ✅ Test: Get My Adopted Pets (User Not Found)
     @Test
     void testGetMyAdoptedPets_UserNotFound() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
@@ -134,7 +127,6 @@ class AdoptionControllerTest {
         assertEquals("User not found.", exception.getReason());
     }
 
-    // ✅ Test: Unadopt Pet (Success)
     @Test
     void testUnadoptPet_Success() {
         pet.setStatus(PetStatus.ADOPTED);
@@ -151,7 +143,6 @@ class AdoptionControllerTest {
         verify(adoptionRepository, times(1)).delete(any(Adoption.class));
     }
 
-    // ✅ Test: Unadopt Pet (User Not Found)
     @Test
     void testUnadoptPet_UserNotFound() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
@@ -163,7 +154,6 @@ class AdoptionControllerTest {
         assertEquals("User not found.", exception.getReason());
     }
 
-    // ✅ Test: Unadopt Pet (Pet Not Found)
     @Test
     void testUnadoptPet_PetNotFound() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -176,7 +166,6 @@ class AdoptionControllerTest {
         assertEquals("Pet not found.", exception.getReason());
     }
 
-    // ✅ Test: Unadopt Pet (Adoption Record Not Found)
     @Test
     void testUnadoptPet_AdoptionRecordNotFound() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -189,7 +178,6 @@ class AdoptionControllerTest {
         assertEquals("Adoption record not found or pet is not adopted.", response.getBody());
     }
 
-    // ✅ Test: Unadopt Pet (Pet Not Currently Adopted)
     @Test
     void testUnadoptPet_PetNotAdopted() {
         pet.setStatus(PetStatus.AVAILABLE);
