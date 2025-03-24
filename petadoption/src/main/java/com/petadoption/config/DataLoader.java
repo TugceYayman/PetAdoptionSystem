@@ -15,6 +15,13 @@ import java.util.List;
 
 @Configuration
 public class DataLoader {
+	
+	private static final String SPECIES_RABBIT = "Rabbit";
+	private static final String SPECIES_CAT = "Cat";
+	private static final String SPECIES_DOG = "Dog";
+
+
+
 
     @Bean
     CommandLineRunner initData(
@@ -26,21 +33,21 @@ public class DataLoader {
         return args -> {
             if (petRepository.count() == 0) {
             	List<Pet> pets = List.of(
-            		    new Pet(null, "Buddy", "Dog", "Golden Retriever", 2, PetStatus.AVAILABLE, "/uploads/dog1.jpg"),
-            		    new Pet(null, "Max", "Dog", "Labrador Retriever", 3, PetStatus.AVAILABLE, "/uploads/dog2.jpg"),
-            		    new Pet(null, "Bella", "Dog", "Beagle", 4, PetStatus.AVAILABLE, "/uploads/dog3.jpg"),
-            		    new Pet(null, "Rocky", "Dog", "Bulldog", 1, PetStatus.AVAILABLE, "/uploads/dog4.jpg"),
-            		    new Pet(null, "Charlie", "Dog", "Poodle", 5, PetStatus.AVAILABLE, "/uploads/dog5.jpg"),
+            		    new Pet(null, "Buddy", SPECIES_DOG, "Golden Retriever", 2, PetStatus.AVAILABLE, "/uploads/dog1.jpg"),
+            		    new Pet(null, "Max", SPECIES_DOG, "Labrador Retriever", 3, PetStatus.AVAILABLE, "/uploads/dog2.jpg"),
+            		    new Pet(null, "Bella", SPECIES_DOG, "Beagle", 4, PetStatus.AVAILABLE, "/uploads/dog3.jpg"),
+            		    new Pet(null, "Rocky", SPECIES_DOG, "Bulldog", 1, PetStatus.AVAILABLE, "/uploads/dog4.jpg"),
+            		    new Pet(null, "Charlie", SPECIES_DOG, "Poodle", 5, PetStatus.AVAILABLE, "/uploads/dog5.jpg"),
 
-            		    new Pet(null, "Whiskers", "Cat", "Persian", 3, PetStatus.AVAILABLE, "/uploads/cat1.jpg"),
-            		    new Pet(null, "Mittens", "Cat", "Siamese", 2, PetStatus.AVAILABLE, "/uploads/cat2.jpg"),
-            		    new Pet(null, "Shadow", "Cat", "Maine Coon", 4, PetStatus.AVAILABLE, "/uploads/cat3.jpg"),
-            		    new Pet(null, "Luna", "Cat", "Bengal", 1, PetStatus.AVAILABLE, "/uploads/cat4.jpg"),
-            		    new Pet(null, "Simba", "Cat", "Scottish Fold", 3, PetStatus.AVAILABLE, "/uploads/cat5.jpg"),
+            		    new Pet(null, "Whiskers", SPECIES_CAT, "Persian", 3, PetStatus.AVAILABLE, "/uploads/cat1.jpg"),
+            		    new Pet(null, "Mittens", SPECIES_CAT, "Siamese", 2, PetStatus.AVAILABLE, "/uploads/cat2.jpg"),
+            		    new Pet(null, "Shadow", SPECIES_CAT, "Maine Coon", 4, PetStatus.AVAILABLE, "/uploads/cat3.jpg"),
+            		    new Pet(null, "Luna", SPECIES_CAT, "Bengal", 1, PetStatus.AVAILABLE, "/uploads/cat4.jpg"),
+            		    new Pet(null, "Simba", SPECIES_CAT, "Scottish Fold", 3, PetStatus.AVAILABLE, "/uploads/cat5.jpg"),
 
-            		    new Pet(null, "Thumper", "Rabbit", "Holland Lop", 2, PetStatus.AVAILABLE, "/uploads/rabbit1.jpg"),
-            		    new Pet(null, "Coco", "Rabbit", "Netherland Dwarf", 1, PetStatus.AVAILABLE, "/uploads/rabbit2.jpg"),
-            		    new Pet(null, "Snowball", "Rabbit", "Lionhead", 3, PetStatus.AVAILABLE, "/uploads/rabbit3.jpg")
+            		    new Pet(null, "Thumper", SPECIES_RABBIT, "Holland Lop", 2, PetStatus.AVAILABLE, "/uploads/rabbit1.jpg"),
+            		    new Pet(null, "Coco", SPECIES_RABBIT, "Netherland Dwarf", 1, PetStatus.AVAILABLE, "/uploads/rabbit2.jpg"),
+            		    new Pet(null, "Snowball", SPECIES_RABBIT, "Lionhead", 3, PetStatus.AVAILABLE, "/uploads/rabbit3.jpg")
             		 
             		);
 

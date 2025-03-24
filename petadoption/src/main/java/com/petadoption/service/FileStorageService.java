@@ -18,14 +18,14 @@ public class FileStorageService {
     // ✅ Set absolute upload path to ensure files are stored correctly
     private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
+
     public FileStorageService() {
         File uploadDir = new File(UPLOAD_DIR);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs(); // ✅ Ensure upload directory exists
         }
     }
-
-    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
 
     private boolean isValidFileExtension(String filename) {
         return ALLOWED_EXTENSIONS.stream().anyMatch(filename.toLowerCase()::endsWith);
@@ -37,6 +37,10 @@ public class FileStorageService {
         }
 
         String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            throw new IllegalArgumentException("File must have a name!");
+        }
+
         if (!isValidFileExtension(originalFilename)) {
             throw new IllegalArgumentException("Invalid file type! Only JPG, JPEG, PNG are allowed.");
         }
@@ -46,7 +50,7 @@ public class FileStorageService {
             String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
             Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
 
-            saveFile(file, filePath); // ✅ This method is now separate
+            saveFile(file, filePath);
 
             return "/uploads/" + uniqueFilename;
         } catch (IOException e) {
