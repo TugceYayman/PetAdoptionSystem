@@ -156,6 +156,44 @@ class PetControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("Failed to update pet"));
     }
+    
+    @Test
+    void testGetPetById_HateoasLinksPresent() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
+
+        ResponseEntity<?> response = petController.getPetById(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("self"));
+        assertTrue(response.getBody().toString().contains("all-pets"));
+        assertTrue(response.getBody().toString().contains("update-pet"));
+        assertTrue(response.getBody().toString().contains("delete-pet"));
+    }
+
+    @Test
+    void testDeletePet_Success() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
+        doNothing().when(adoptionRepository).deleteByPetId(1L);
+        doNothing().when(petRepository).deleteById(1L);
+
+        ResponseEntity<String> response = petController.deletePet(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().contains("✅ Pet deleted successfully!"));
+    }
+
+    
+    @Test
+    void testDeletePet_FailureDueToException() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
+        doThrow(new RuntimeException("DB error")).when(petRepository).deleteById(1L);
+
+        ResponseEntity<String> response = petController.deletePet(1L);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("Error: Failed to delete pet"));
+    }
+
 
   
 
