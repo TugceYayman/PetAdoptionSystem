@@ -56,8 +56,6 @@ class JwtUtilTest {
 
 @Test
 void extractAllClaims_shouldThrowTokenExpiredException() throws Exception {
-    JwtUtil jwtUtil = new JwtUtil();
-
     // Reflectively access the secret key to generate an expired token
     Field keyField = JwtUtil.class.getDeclaredField("jwtSecretKey");
     keyField.setAccessible(true);
@@ -82,7 +80,6 @@ void extractAllClaims_shouldThrowTokenExpiredException() throws Exception {
     
     @Test
     void extractAllClaims_shouldThrowInvalidJwtException() {
-        JwtUtil jwtUtil = new JwtUtil();
 
         InvalidJwtException exception = assertThrows(
                 InvalidJwtException.class,
