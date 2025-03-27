@@ -1,5 +1,6 @@
 package com.petadoption.controller;
 
+import com.petadoption.exception.InvalidCredentialsException;
 import com.petadoption.model.User;
 import com.petadoption.repository.UserRepository;
 import com.petadoption.security.JwtUtil;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;  
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
@@ -43,8 +44,6 @@ public class AuthController {
                 .body(Map.of("message", "User registered successfully"));
     }
 
-
-
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, String> credentials) {
         Optional<User> optionalUser = userRepository.findByEmail(credentials.get("email"));
@@ -55,6 +54,6 @@ public class AuthController {
                 return Map.of("token", token, "role", user.getRole());
             }
         }
-        throw new RuntimeException("Invalid credentials");
+        throw new InvalidCredentialsException("Invalid credentials");
     }
 }

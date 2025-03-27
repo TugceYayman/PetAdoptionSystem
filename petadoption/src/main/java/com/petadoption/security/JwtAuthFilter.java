@@ -40,12 +40,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (jwtUtil.validateToken(token)) {
                     String username = jwtUtil.getUsernameFromToken(token);
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-                    //Extract roles from token
-                    List<String> roles = jwtUtil.getRolesFromToken(token);
-                    System.out.println("🔍 Extracted Roles from Token: " + roles);
-
-                    //Ensure User has the Correct Role
                     List<GrantedAuthority> authorities = jwtUtil.getRolesFromToken(token).stream()
                     	    .map(SimpleGrantedAuthority::new)
                     	    .collect(Collectors.toList());

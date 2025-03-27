@@ -3,13 +3,13 @@ package com.petadoption.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
-
+import com.petadoption.exception.InvalidJwtException;
+import com.petadoption.exception.TokenExpiredException;
 import javax.crypto.SecretKey;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -47,10 +47,10 @@ public class JwtUtil {
 
         if (rolesObject instanceof List<?>) {
             return ((List<?>) rolesObject).stream()
-                    .map(Object::toString)  
-                    .collect(Collectors.toList());
+            		.map(Object::toString)
+            		.toList();
         } else if (rolesObject instanceof String) {
-            return List.of(rolesObject.toString());
+            return List.of(rolesObject.toString()); 
         } else {
             return new ArrayList<>();
         }
@@ -61,14 +61,14 @@ public class JwtUtil {
     public Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(jwtSecretKey)  
+                    .setSigningKey(jwtSecretKey)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("Token has expired.", e);
+            throw new TokenExpiredException("Token has expired.", e);
         } catch (JwtException e) {
-            throw new RuntimeException("Invalid JWT token.", e);
+            throw new InvalidJwtException("Invalid JWT token.", e);
         }
     }
 

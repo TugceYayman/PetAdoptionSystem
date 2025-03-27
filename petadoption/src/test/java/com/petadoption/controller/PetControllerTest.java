@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,6 @@ class PetControllerTest {
         pet = new Pet(1L, "Buddy", "Dog", "Golden Retriever", 2, PetStatus.AVAILABLE, "/uploads/dog.jpg");
     }
 
-    // ✅ Test: Get All Pets (Success)
     @Test
     void testGetAllPets_Success() {
         when(petRepository.findAll()).thenReturn(List.of(pet));
@@ -57,7 +55,6 @@ class PetControllerTest {
         assertEquals(pet, response.getBody().get(0));
     }
 
-    // ✅ Test: Get Pet by ID (Success)
     @Test
     void testGetPetById_Success() {
         when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
@@ -67,7 +64,6 @@ class PetControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    // ✅ Test: Get Pet by ID (Not Found)
     @Test
     void testGetPetById_NotFound() {
         when(petRepository.findById(1L)).thenReturn(Optional.empty());
@@ -77,7 +73,6 @@ class PetControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    // ✅ Test: Add Pet (Success)
     @Test
     void testAddPet_Success() {
         when(petRepository.save(any(Pet.class))).thenReturn(pet);
@@ -88,9 +83,8 @@ class PetControllerTest {
         assertEquals("Pet added successfully!", response.getBody());
     }
 
-    // ✅ Test: Add Pet (With Image Upload)
     @Test
-    void testAddPet_WithImage_Success() throws Exception {
+    void testAddPet_WithImage_Success() {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
         when(fileStorageService.uploadFile(mockFile)).thenReturn("/uploads/dog1.jpg");
@@ -102,9 +96,8 @@ class PetControllerTest {
         assertEquals("Pet added successfully!", response.getBody());
     }
 
-    // ✅ Test: Add Pet (Failed Image Upload)
     @Test
-    void testAddPet_FailedImageUpload() throws Exception {
+    void testAddPet_FailedImageUpload() {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
         when(fileStorageService.uploadFile(mockFile)).thenThrow(new RuntimeException("Upload failed"));
@@ -115,7 +108,7 @@ class PetControllerTest {
         assertTrue(response.getBody().contains("Failed to add pet"));
     }
 
-    // ✅ Test: Update Pet (Success)
+
     @Test
     void testUpdatePet_Success() {
         when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
@@ -127,7 +120,6 @@ class PetControllerTest {
         assertEquals("Pet updated successfully!", response.getBody());
     }
 
-    // ✅ Test: Update Pet (Not Found)
     @Test
     void testUpdatePet_NotFound() {
         when(petRepository.findById(1L)).thenReturn(Optional.empty());
@@ -138,9 +130,8 @@ class PetControllerTest {
         assertEquals("Pet not found.", response.getBody());
     }
 
-    // ✅ Test: Update Pet (With Image Upload)
     @Test
-    void testUpdatePet_WithImage_Success() throws Exception {
+    void testUpdatePet_WithImage_Success()  {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
         when(fileStorageService.uploadFile(mockFile)).thenReturn("/uploads/dog.jpg");
@@ -153,9 +144,8 @@ class PetControllerTest {
         assertEquals("Pet updated successfully!", response.getBody());
     }
 
-    // ✅ Test: Update Pet (Failed Image Upload)
     @Test
-    void testUpdatePet_FailedImageUpload() throws Exception {
+    void testUpdatePet_FailedImageUpload()  {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
         when(fileStorageService.uploadFile(mockFile)).thenThrow(new RuntimeException("Upload failed"));
@@ -166,6 +156,44 @@ class PetControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("Failed to update pet"));
     }
+    
+    @Test
+    void testGetPetById_HateoasLinksPresent() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
+
+        ResponseEntity<?> response = petController.getPetById(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("self"));
+        assertTrue(response.getBody().toString().contains("all-pets"));
+        assertTrue(response.getBody().toString().contains("update-pet"));
+        assertTrue(response.getBody().toString().contains("delete-pet"));
+    }
+
+    @Test
+    void testDeletePet_Success() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
+        doNothing().when(adoptionRepository).deleteByPetId(1L);
+        doNothing().when(petRepository).deleteById(1L);
+
+        ResponseEntity<String> response = petController.deletePet(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().contains("✅ Pet deleted successfully!"));
+    }
+
+    
+    @Test
+    void testDeletePet_FailureDueToException() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(pet));
+        doThrow(new RuntimeException("DB error")).when(petRepository).deleteById(1L);
+
+        ResponseEntity<String> response = petController.deletePet(1L);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("Error: Failed to delete pet"));
+    }
+
 
   
 

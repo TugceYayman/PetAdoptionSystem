@@ -1,5 +1,6 @@
 package com.petadoption.service;
 
+import com.petadoption.exception.FileStorageException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,16 +16,15 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
+    private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
 
     public FileStorageService() {
-        File uploadDir = new File(UPLOAD_DIR);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); 
+        File uploadFolder = new File(uploadDir);
+        if (!uploadFolder.exists()) {
+            uploadFolder.mkdirs();
         }
     }
-
-    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png");
 
     private boolean isValidFileExtension(String filename) {
         return ALLOWED_EXTENSIONS.stream().anyMatch(filename.toLowerCase()::endsWith);
@@ -36,6 +36,10 @@ public class FileStorageService {
         }
 
         String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            throw new IllegalArgumentException("File must have a name!");
+        }
+
         if (!isValidFileExtension(originalFilename)) {
             throw new IllegalArgumentException("Invalid file type! Only JPG, JPEG, PNG are allowed.");
         }
@@ -43,13 +47,11 @@ public class FileStorageService {
         try {
             String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
-            Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
-
-            saveFile(file, filePath); 
-
+            Path filePath = Paths.get(uploadDir, uniqueFilename);
+            saveFile(file, filePath);
             return "/uploads/" + uniqueFilename;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
+            throw new FileStorageException("Failed to store file: " + e.getMessage(), e);
         }
     }
 

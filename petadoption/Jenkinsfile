@@ -1,0 +1,110 @@
+pipeline {
+    agent any
+
+    tools {
+        maven "maven"  // Match this with your Jenkins Maven tool name
+    }
+
+    environment {
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONARQUBE_TOKEN = credentials('sonar-token') // Jenkins credentials ID
+        SONAR_PROJECT_KEY = 'PetAdoptionSystem'
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    bat 'if not exist test_logs mkdir test_logs'
+                }
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                checkout([$class: 'GitSCM',
+                          userRemoteConfigs: [[
+                            url: 'https://github.com/TugceYayman/PetAdoptionSystem.git',
+                            credentialsId: 'github-ssh'
+                          ]],
+                          branches: [[name: 'feature/development']]])
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('petadoption') {
+                    bat "mvn clean package -DskipTests"
+                }
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                dir('petadoption') {
+                    bat 'mvn test'
+                }
+            }
+            post {
+                always {
+                    echo 'Unit tests completed'
+                    junit 'petadoption/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Integration Tests & Publish Coverage') {
+            steps {
+                dir('petadoption') {
+                    bat 'mvn verify -Dsurefire.useFile=false -Dfailsafe.useFile=false'
+                }
+            }
+            post {
+                always {
+                    echo 'Integration tests completed'
+                    junit 'petadoption/target/failsafe-reports/*.xml'
+                    recordCoverage(
+                        tools: [[parser: 'JACOCO']],
+                        id: 'jacoco',
+                        name: 'JaCoCo Coverage',
+                        sourceCodeRetention: 'EVERY_BUILD'
+                    )
+                }
+            }
+        }
+
+		stage('SonarQube Analysis') {
+		    steps {
+		        withSonarQubeEnv('sonarqube') {
+		            dir('petadoption') {
+		                bat """
+		                mvn sonar:sonar ^
+		                  -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+		                  -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report-merged/jacoco.xml ^
+		                  -Dsonar.java.binaries=target/classes
+		                """
+		            }
+		        }
+		    }
+		    post {
+		        always {
+		            echo 'SonarQube analysis completed'
+		        }
+		    }
+		}
+
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'petadoption/target/surefire-reports/**, petadoption/target/failsafe-reports/**, petadoption/target/site/jacoco/**, petadoption/target/*.jar', fingerprint: true
+                echo 'Artifacts archived successfully'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Build completed with status: ${currentBuild.result}"
+        }
+    }
+}
