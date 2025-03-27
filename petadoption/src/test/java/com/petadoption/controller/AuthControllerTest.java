@@ -2,7 +2,6 @@ package com.petadoption.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petadoption.exception.InvalidCredentialsException;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.UUID;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -80,6 +81,27 @@ class AuthControllerTest implements ApplicationContextAware {
                 assertEquals("Email already exists", responseNode.get("message").asText());
             });
     }
+
+    @Test
+    void testRegisterUser_Success() throws Exception {
+        String randomEmail = "user+" + UUID.randomUUID() + "@petadoption.com";
+
+        AuthRequest request = new AuthRequest();
+        request.setName("New User");
+        request.setEmail(randomEmail); // ✅ unique email for every run
+        request.setPassword("newpassword123");
+
+        mockMvc.perform(post("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(result -> {
+                String jsonResponse = result.getResponse().getContentAsString();
+                JsonNode responseNode = objectMapper.readTree(jsonResponse);
+                assertEquals("User registered successfully", responseNode.get("message").asText());
+            });
+    }
+
 
 
 
