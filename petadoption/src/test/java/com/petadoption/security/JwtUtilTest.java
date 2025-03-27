@@ -95,12 +95,10 @@ void extractAllClaims_shouldThrowTokenExpiredException() throws Exception {
     
     @Test
     void getRolesFromToken_shouldHandleStringRole() throws Exception {
-        // Use reflection to get the key for signing
         Field keyField = JwtUtil.class.getDeclaredField("jwtSecretKey");
         keyField.setAccessible(true);
         var secretKey = (javax.crypto.SecretKey) keyField.get(jwtUtil);
 
-        // Generate a token with the "role" claim as a plain string (not a List)
         String tokenWithStringRole = Jwts.builder()
                 .setSubject("user@petadoption.com")
                 .claim("role", "USER")
@@ -116,12 +114,10 @@ void extractAllClaims_shouldThrowTokenExpiredException() throws Exception {
 
     @Test
     void getRolesFromToken_shouldHandleUnknownRoleType() throws Exception {
-        // Use reflection to get the key for signing
         Field keyField = JwtUtil.class.getDeclaredField("jwtSecretKey");
         keyField.setAccessible(true);
         var secretKey = (javax.crypto.SecretKey) keyField.get(jwtUtil);
 
-        // Generate a token with an unsupported type for "role" (e.g., Integer)
         String tokenWithInvalidRole = Jwts.builder()
                 .setSubject("user@petadoption.com")
                 .claim("role", 12345)

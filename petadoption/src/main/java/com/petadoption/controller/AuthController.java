@@ -1,6 +1,5 @@
 package com.petadoption.controller;
 
-import com.petadoption.exception.InvalidCredentialsException;
 import com.petadoption.model.User;
 import com.petadoption.repository.UserRepository;
 import com.petadoption.security.JwtUtil;
@@ -17,6 +16,7 @@ import java.util.Optional;
 @RequestMapping("/auth")
 public class AuthController {
 
+    private static final String MESSAGE_KEY = "message"; 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -32,7 +32,7 @@ public class AuthController {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "Email already exists"));
+                    .body(Map.of(MESSAGE_KEY, "Email already exists"));
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -41,19 +41,23 @@ public class AuthController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(Map.of("message", "User registered successfully"));
+                .body(Map.of(MESSAGE_KEY, "User registered successfully"));
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> credentials) {
         Optional<User> optionalUser = userRepository.findByEmail(credentials.get("email"));
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (passwordEncoder.matches(credentials.get("password"), user.getPassword())) {
                 String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
-                return Map.of("token", token, "role", user.getRole());
+                return ResponseEntity.ok(Map.of("token", token, "role", user.getRole()));
             }
         }
-        throw new InvalidCredentialsException("Invalid credentials");
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED) // 401
+                .body(Map.of(MESSAGE_KEY, "Invalid credentials"));
     }
+
 }

@@ -2,7 +2,6 @@ package com.petadoption.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -88,7 +87,7 @@ class AuthControllerTest implements ApplicationContextAware {
 
         AuthRequest request = new AuthRequest();
         request.setName("New User");
-        request.setEmail(randomEmail); // ✅ unique email for every run
+        request.setEmail(randomEmail);
         request.setPassword("newpassword123");
 
         mockMvc.perform(post("/auth/register")
