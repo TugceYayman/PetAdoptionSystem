@@ -25,6 +25,8 @@ class JwtUtilTest {
         jwtUtil = new JwtUtil();
         testToken = jwtUtil.generateToken("user@petadoption.com", "USER");
     }
+    
+    
 
     @Test
     void generateToken_Valid() {
